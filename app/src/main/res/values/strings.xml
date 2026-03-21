@@ -20,4 +20,23 @@
     <string name="guitar">GUITAR</string>
     <string name="bass">BASS</string>
     <string name="position">POSITION</string>
+    <string name="status_loading_chords">Loading chords…</string>
+    <string name="status_checking_updates">Checking for updates…</string>
+    <string name="status_update_failed">Could not check for updates</string>
+    <string name="status_retrying">Retrying…</string>
+    <string name="status_downloading">Downloading v%1$s…</string>
+    <string name="status_installing">Installing…</string>
+    <string name="status_download_failed">Download failed</string>
+    <string name="download_percent">%1$d%%</string>
+    <string name="dialog_no_internet_title">No Internet Connection</string>
+    <string name="dialog_no_internet_message">Radboard could not connect to the internet.\n\nUpdate checking and font loading require an internet connection. The app will still work without it.</string>
+    <string name="dialog_update_title">Update Available — v%1$s</string>
+    <string name="dialog_update_message">A new version of Radboard is available.\n\n%1$s</string>
+    <string name="dialog_update_ready_title">Update Ready — v%1$s</string>
+    <string name="dialog_update_ready_message">A previously downloaded update is ready to install.</string>
+    <string name="btn_retry">Retry</string>
+    <string name="btn_continue_anyway">Continue Anyway</string>
+    <string name="btn_update_now">Update Now</string>
+    <string name="btn_install_now">Install Now</string>
+    <string name="btn_skip">Skip</string>
 </resources>

@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class SplashActivity : AppCompatActivity() {
 
@@ -24,8 +27,6 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var tvDownloadPercent: TextView
 
     private val handler = Handler(Looper.getMainLooper())
-    private var loadingComplete = false
-    private var animationComplete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,6 @@ class SplashActivity : AppCompatActivity() {
                     .setDuration(250)
                     .setInterpolator(DecelerateInterpolator())
                     .withEndAction {
-                        animationComplete = true
                         startLoading()
                     }
                     .start()
@@ -80,27 +80,35 @@ class SplashActivity : AppCompatActivity() {
     private fun startLoading() {
         Thread {
             // Step 1 — Init chord repository
-            runOnUiThread { tvStatus.text = "Loading chords..." }
+            runOnUiThread { tvStatus.setText(R.string.status_loading_chords) }
             ChordRepository.init(this)
             Thread.sleep(400)
 
-            // Step 2 — Check internet
+            // Step 2 — Check for already downloaded update
+            val existingUpdate = ApkDownloader.findExistingUpdate(this)
+            if (existingUpdate != null) {
+                val version = existingUpdate.name
+                    .removePrefix("radboard-")
+                    .removeSuffix(".apk")
+                runOnUiThread { showExistingUpdateDialog(existingUpdate, version) }
+                return@Thread
+            }
+
+            // Step 3 — Check internet
             if (!UpdateManager.isInternetAvailable(this)) {
                 runOnUiThread { showNoInternetDialog() }
                 return@Thread
             }
 
-            // Step 3 — Check for updates
-            runOnUiThread { tvStatus.text = "Checking for updates..." }
+            // Step 4 — Check for updates
+            runOnUiThread { tvStatus.setText(R.string.status_checking_updates) }
             val release = UpdateManager.checkForUpdate()
 
             runOnUiThread {
                 when {
                     release == null -> {
-                        // Could not reach GitHub — proceed anyway
-                        tvStatus.text = "Could not check for updates"
-                        Thread.sleep(600)
-                        finishLoading()
+                        tvStatus.setText(R.string.status_update_failed)
+                        handler.postDelayed({ finishLoading() }, 600)
                     }
                     release.isNewer -> showUpdateDialog(release)
                     else -> finishLoading()
@@ -114,55 +122,60 @@ class SplashActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     private fun showNoInternetDialog() {
-        val dialogView = layoutInflater.inflate(
-            android.R.layout.select_dialog_singlechoice, null
-        )
-
         AlertDialog.Builder(this)
-            .setTitle("No Internet Connection")
-            .setMessage(
-                "Radboard could not connect to the internet.\n\n" +
-                        "Update checking and font loading require an internet connection. " +
-                        "The app will still work without it."
-            )
-            .setPositiveButton("Retry") { _, _ ->
-                tvStatus.text = "Retrying..."
+            .setTitle(R.string.dialog_no_internet_title)
+            .setMessage(R.string.dialog_no_internet_message)
+            .setPositiveButton(R.string.btn_retry) { _, _ ->
+                tvStatus.setText(R.string.status_retrying)
                 startLoading()
             }
-            .setNegativeButton("Continue Anyway") { _, _ ->
+            .setNegativeButton(R.string.btn_continue_anyway) { _, _ ->
                 finishLoading()
             }
             .setCancelable(false)
             .show()
             .apply {
-                // Style to match app
-                getButton(AlertDialog.BUTTON_POSITIVE)
-                    ?.setTextColor(0xFF7DD6FF.toInt())
-                getButton(AlertDialog.BUTTON_NEGATIVE)
-                    ?.setTextColor(0xFF8A8A8A.toInt())
+                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(0xFF7DD6FF.toInt())
+                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(0xFF8A8A8A.toInt())
                 window?.setBackgroundDrawableResource(R.drawable.bg_card)
             }
     }
 
     private fun showUpdateDialog(release: UpdateManager.ReleaseInfo) {
         AlertDialog.Builder(this)
-            .setTitle("Update Available — v${release.tagName}")
-            .setMessage(
-                "A new version of Radboard is available.\n\n${release.releaseNotes}"
-            )
-            .setPositiveButton("Update Now") { _, _ ->
-                startDownload(release.apkUrl)
+            .setTitle(getString(R.string.dialog_update_title, release.tagName))
+            .setMessage(getString(R.string.dialog_update_message, release.releaseNotes))
+            .setPositiveButton(R.string.btn_update_now) { _, _ ->
+                startDownload(release.apkUrl, release.tagName)
             }
-            .setNegativeButton("Skip") { _, _ ->
+            .setNegativeButton(R.string.btn_skip) { _, _ ->
                 finishLoading()
             }
             .setCancelable(false)
             .show()
             .apply {
-                getButton(AlertDialog.BUTTON_POSITIVE)
-                    ?.setTextColor(0xFFBFFFAA.toInt())
-                getButton(AlertDialog.BUTTON_NEGATIVE)
-                    ?.setTextColor(0xFF8A8A8A.toInt())
+                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(0xFFBFFFAA.toInt())
+                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(0xFF8A8A8A.toInt())
+                window?.setBackgroundDrawableResource(R.drawable.bg_card)
+            }
+    }
+
+    private fun showExistingUpdateDialog(apkFile: File, version: String) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_update_ready_title, version))
+            .setMessage(R.string.dialog_update_ready_message)
+            .setPositiveButton(R.string.btn_install_now) { _, _ ->
+                ApkDownloader.installApk(this, apkFile)
+            }
+            .setNegativeButton(R.string.btn_skip) { _, _ ->
+                apkFile.delete()
+                finishLoading()
+            }
+            .setCancelable(false)
+            .show()
+            .apply {
+                getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(0xFFBFFFAA.toInt())
+                getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(0xFF8A8A8A.toInt())
                 window?.setBackgroundDrawableResource(R.drawable.bg_card)
             }
     }
@@ -171,31 +184,29 @@ class SplashActivity : AppCompatActivity() {
     // Download
     // -------------------------------------------------------------------------
 
-    private fun startDownload(apkUrl: String) {
-        // Show download UI
+    private fun startDownload(apkUrl: String, version: String) {
         splashSpinner.visibility = View.GONE
         downloadProgress.visibility = View.VISIBLE
         tvDownloadPercent.visibility = View.VISIBLE
-        tvStatus.text = "Downloading update..."
+        tvStatus.text = getString(R.string.status_downloading, version)
 
         ApkDownloader.download(
             context = this,
             apkUrl = apkUrl,
+            version = version,
             onProgress = { percent ->
                 downloadProgress.progress = percent
-                tvDownloadPercent.text = "$percent%"
+                tvDownloadPercent.text = getString(R.string.download_percent, percent)
             },
             onComplete = {
-                tvStatus.text = "Installing..."
-                tvDownloadPercent.text = "100%"
-                // Install is triggered automatically inside ApkDownloader
+                tvStatus.setText(R.string.status_installing)
+                tvDownloadPercent.text = getString(R.string.download_percent, 100)
             },
             onError = {
-                tvStatus.text = "Download failed"
+                tvStatus.setText(R.string.status_download_failed)
                 downloadProgress.visibility = View.GONE
                 tvDownloadPercent.visibility = View.GONE
                 splashSpinner.visibility = View.VISIBLE
-                // Wait a moment then continue to app
                 handler.postDelayed({ finishLoading() }, 1500)
             }
         )
@@ -206,7 +217,6 @@ class SplashActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     private fun finishLoading() {
-        loadingComplete = true
         tvStatus.text = ""
         darkOverlay.animate()
             .alpha(1f)
@@ -214,10 +224,8 @@ class SplashActivity : AppCompatActivity() {
             .setInterpolator(DecelerateInterpolator())
             .withEndAction {
                 startActivity(Intent(this, MainActivity::class.java))
-                overridePendingTransition(
-                    R.anim.slide_in_up,
-                    R.anim.slide_out_up
-                )
+                @Suppress("DEPRECATION")
+                overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up)
                 finish()
             }
             .start()
@@ -234,6 +242,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun hideSystemUI() {
+        @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
