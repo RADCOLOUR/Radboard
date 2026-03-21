@@ -9,12 +9,12 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 
 class NotepadActivity : AppCompatActivity() {
 
-    private lateinit var btnBack: Button
+    private lateinit var btnBack: ImageButton
     private lateinit var btnBold: Button
     private lateinit var btnBullet: Button
     private lateinit var btnClear: Button
@@ -41,6 +41,8 @@ class NotepadActivity : AppCompatActivity() {
         btnBack.setOnClickListener {
             saveNotes()
             finish()
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
         btnBold.setOnClickListener {
@@ -111,6 +113,7 @@ class NotepadActivity : AppCompatActivity() {
         if (hasFocus) hideSystemUI()
     }
 
+    @Suppress("DEPRECATION")
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY

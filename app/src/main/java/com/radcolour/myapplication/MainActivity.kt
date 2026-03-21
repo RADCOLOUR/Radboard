@@ -9,6 +9,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var sidebar: View
-    private lateinit var btnMenu: Button
+    private lateinit var btnMenu: ImageButton
     private lateinit var tvClock: TextView
     private lateinit var tvSessionTimer: TextView
     private lateinit var tvBpm: TextView
@@ -27,10 +29,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSessionReset: Button
     private lateinit var btnTap: Button
     private lateinit var btnBpmReset: Button
-    private lateinit var btnChords: Button
-    private lateinit var btnNotepad: Button
-    private lateinit var btnProgressions: Button
-    private lateinit var btnSettings: Button
+    private lateinit var btnChords: LinearLayout
+    private lateinit var btnNotepad: LinearLayout
+    private lateinit var btnProgressions: LinearLayout
+    private lateinit var btnSettings: LinearLayout
 
     private val handler = Handler(Looper.getMainLooper())
     private val clockFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -41,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     private var swipeStartX = 0f
     private var swipeStartY = 0f
     private val swipeThreshold = 100f
-    private val swipeVelocityThreshold = 50f
 
     private val clockRunnable = object : Runnable {
         override fun run() {
@@ -81,12 +82,9 @@ class MainActivity : AppCompatActivity() {
         btnNotepad = findViewById(R.id.btnNotepad)
         btnProgressions = findViewById(R.id.btnProgressions)
         btnSettings = findViewById(R.id.btnSettings)
-        btnSettings.setOnClickListener {
-            drawerLayout.closeDrawer(sidebar)
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
 
         handler.post(clockRunnable)
+
         btnMenu.setOnClickListener {
             if (drawerLayout.isDrawerOpen(sidebar)) {
                 drawerLayout.closeDrawer(sidebar)
@@ -94,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(sidebar)
             }
         }
+
         btnSessionStart.setOnClickListener {
             if (sessionRunning) {
                 sessionRunning = false
@@ -135,16 +134,29 @@ class MainActivity : AppCompatActivity() {
         btnChords.setOnClickListener {
             drawerLayout.closeDrawer(sidebar)
             startActivity(Intent(this, ChordsActivity::class.java))
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         btnNotepad.setOnClickListener {
             drawerLayout.closeDrawer(sidebar)
             startActivity(Intent(this, NotepadActivity::class.java))
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         btnProgressions.setOnClickListener {
             drawerLayout.closeDrawer(sidebar)
             startActivity(Intent(this, ProgressionActivity::class.java))
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        }
+
+        btnSettings.setOnClickListener {
+            drawerLayout.closeDrawer(sidebar)
+            startActivity(Intent(this, SettingsActivity::class.java))
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         drawerLayout.setOnTouchListener { _, event ->
@@ -189,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacksAndMessages(null)
     }
 
+    @Suppress("DEPRECATION")
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY

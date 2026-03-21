@@ -9,14 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.json.JSONArray
 import org.json.JSONObject
+import android.widget.ImageButton
 
 class ProgressionActivity : AppCompatActivity() {
-    private lateinit var btnBack: Button
+
+    private lateinit var btnBack: ImageButton
     private lateinit var btnAddSection: Button
     private lateinit var sectionsContainer: LinearLayout
     private lateinit var tvSongTitle: TextView
 
-    private lateinit var btnTranspose: Button
     private val PREFS_NAME = "progression_prefs"
     private val KEY_SECTIONS = "sections"
 
@@ -42,8 +43,6 @@ class ProgressionActivity : AppCompatActivity() {
 
         btnBack = findViewById(R.id.btnBack)
         btnAddSection = findViewById(R.id.btnAddSection)
-        btnTranspose = findViewById(R.id.btnTranspose)
-        btnTranspose.setOnClickListener { showTransposer() }
         sectionsContainer = findViewById(R.id.sectionsContainer)
         tvSongTitle = findViewById(R.id.tvSongTitle)
 
@@ -53,6 +52,8 @@ class ProgressionActivity : AppCompatActivity() {
         btnBack.setOnClickListener {
             saveSections()
             finish()
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
         btnAddSection.setOnClickListener {
@@ -60,35 +61,6 @@ class ProgressionActivity : AppCompatActivity() {
         }
     }
 
-    private fun showTransposer() {
-
-        val allChords = sections.flatMap { it.chords }.distinct()
-
-        TransposerDialog(
-            context = this,
-            chordData = ChordRepository.getAllChords(),
-            currentProgression = allChords,
-            onProgressionTransposed = { transposed ->
-                val oldChords = allChords
-                val chordMap = oldChords.zip(transposed).toMap()
-
-                sections.forEach { section ->
-                    section.chords.replaceAll { chord ->
-                        chordMap[chord] ?: chord
-                    }
-                }
-
-                saveSections()
-                rebuildUI()
-
-                Toast.makeText(
-                    this,
-                    getString(R.string.transposer_applied),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        ).show()
-    }
     private fun showAddSectionDialog() {
         val options = (defaultSectionTypes + listOf("Custom...")).toTypedArray()
         AlertDialog.Builder(this)
@@ -144,6 +116,7 @@ class ProgressionActivity : AppCompatActivity() {
             }
             .show()
     }
+
     private fun rebuildUI() {
         sectionsContainer.removeAllViews()
         sections.forEach { section ->
@@ -173,7 +146,7 @@ class ProgressionActivity : AppCompatActivity() {
         val tvName = TextView(this).apply {
             text = section.name
             textSize = 12f
-            setTextColor(0xFFFFBDE1.toInt())
+            setTextColor(0xFFFFB3D9.toInt())
             layoutParams = LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
             ).also { it.gravity = android.view.Gravity.CENTER_VERTICAL }
@@ -193,7 +166,7 @@ class ProgressionActivity : AppCompatActivity() {
         val btnDeleteSection = Button(this).apply {
             text = "✕"
             textSize = 9f
-            setTextColor(0xFFFF4444.toInt())
+            setTextColor(0xFFFF5449.toInt())
             backgroundTintList = ContextCompat.getColorStateList(context, R.color.dark)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, 32
@@ -250,7 +223,7 @@ class ProgressionActivity : AppCompatActivity() {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 1
             )
-            setBackgroundColor(0xFF222222.toInt())
+            setBackgroundColor(0xFF2B2B2B.toInt())
         })
 
         rebuildSectionContent(section, chipsInner, diagramsInner)
@@ -289,7 +262,7 @@ class ProgressionActivity : AppCompatActivity() {
             chipsInner.addView(TextView(this).apply {
                 text = "No chords yet — tap + Chord to add"
                 textSize = 10f
-                setTextColor(0xFF444444.toInt())
+                setTextColor(0xFF8A8A8A.toInt())
                 setPadding(8, 0, 0, 0)
                 gravity = android.view.Gravity.CENTER_VERTICAL
                 layoutParams = LinearLayout.LayoutParams(
@@ -301,16 +274,18 @@ class ProgressionActivity : AppCompatActivity() {
         }
 
         section.chords.forEachIndexed { index, chordName ->
-
             val chip = Button(this).apply {
                 text = chordName
                 textSize = 10f
-                setTextColor(0xFF8BDCFF.toInt())
+                setTextColor(0xFF7DD6FF.toInt())
+                background = getDrawable(R.drawable.bg_button_press)
                 backgroundTintList = ContextCompat.getColorStateList(context, R.color.dark)
+                stateListAnimator = null
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, 36
                 ).also { it.marginEnd = 6 }
             }
+
             chip.setOnLongClickListener {
                 AlertDialog.Builder(this)
                     .setTitle("Remove Chord")
@@ -329,6 +304,7 @@ class ProgressionActivity : AppCompatActivity() {
             val chordInfo = ChordRepository.getAllChords()[chordName]
             val diagramContainer = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
+                background = getDrawable(R.drawable.bg_card_gradient_blue)
                 layoutParams = LinearLayout.LayoutParams(
                     (diagramHeightDp * 0.75 * resources.displayMetrics.density).toInt(),
                     LinearLayout.LayoutParams.MATCH_PARENT
@@ -338,7 +314,7 @@ class ProgressionActivity : AppCompatActivity() {
             val tvLabel = TextView(this).apply {
                 text = chordName
                 textSize = 9f
-                setTextColor(0xFF8BDCFF.toInt())
+                setTextColor(0xFF7DD6FF.toInt())
                 gravity = android.view.Gravity.CENTER
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -361,7 +337,7 @@ class ProgressionActivity : AppCompatActivity() {
                 val tvMissing = TextView(this).apply {
                     text = "?"
                     textSize = 20f
-                    setTextColor(0xFF444444.toInt())
+                    setTextColor(0xFF8A8A8A.toInt())
                     gravity = android.view.Gravity.CENTER
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -375,6 +351,7 @@ class ProgressionActivity : AppCompatActivity() {
             diagramsInner.addView(diagramContainer)
         }
     }
+
     private fun saveSections() {
         val array = JSONArray()
         sections.forEach { section ->
@@ -421,6 +398,7 @@ class ProgressionActivity : AppCompatActivity() {
         if (hasFocus) hideSystemUI()
     }
 
+    @Suppress("DEPRECATION")
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY

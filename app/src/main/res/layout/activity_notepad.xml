@@ -14,29 +14,35 @@
         android:gravity="center_vertical"
         android:background="@color/background">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"
-            android:background="@drawable/bg_button"
-            android:backgroundTint="@color/tertiary_container"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="← Back"
-            android:textColor="@color/tertiary"
-            android:textSize="9sp"
-            android:stateListAnimator="@null"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_button_press"
+            android:src="@drawable/ic_back"
+            android:scaleType="center"
+            android:contentDescription="@string/btn_back"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Notepad"
-            android:textColor="@color/on_background"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:gravity="center"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_section_header_blue"
+            android:paddingStart="12dp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notepad_title"
+                android:textColor="@color/tertiary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.02"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -49,11 +55,11 @@
                 android:id="@+id/btnBold"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_button"
+                android:background="@drawable/bg_button_press"
                 android:backgroundTint="@color/surface_variant"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:text="B"
+                android:text="@string/btn_bold"
                 android:textColor="@color/on_background"
                 android:textSize="11sp"
                 android:textStyle="bold"
@@ -64,11 +70,11 @@
                 android:id="@+id/btnBullet"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_button"
+                android:background="@drawable/bg_button_press"
                 android:backgroundTint="@color/surface_variant"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:text="• List"
+                android:text="@string/btn_bullet"
                 android:textColor="@color/on_background"
                 android:textSize="11sp"
                 android:stateListAnimator="@null"/>
@@ -79,11 +85,11 @@
             android:id="@+id/btnClear"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:background="@drawable/bg_button"
+            android:background="@drawable/bg_button_press"
             android:backgroundTint="@color/error_container"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:text="Clear"
+            android:text="@string/btn_clear"
             android:textColor="@color/error"
             android:textSize="9sp"
             android:stateListAnimator="@null"
@@ -106,13 +112,13 @@
             android:id="@+id/etNotes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_card"
+            android:background="@drawable/bg_card_gradient_blue"
             android:textColor="@color/on_background"
             android:textSize="13sp"
             android:padding="16dp"
             android:gravity="top|start"
             android:inputType="textMultiLine|textCapSentences"
-            android:hint="Start typing..."
+            android:hint="@string/notepad_hint"
             android:textColorHint="@color/on_surface_variant"
             android:lineSpacingMultiplier="1.4"/>
 

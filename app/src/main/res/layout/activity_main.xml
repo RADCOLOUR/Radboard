@@ -21,17 +21,14 @@
             android:gravity="center_vertical"
             android:background="@color/background">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnMenu"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_button"
-                android:backgroundTint="@color/background"
-                android:text="☰"
-                android:textColor="@color/on_background"
-                android:textSize="18sp"
-                android:padding="0dp"
-                android:stateListAnimator="@null"/>
+                android:background="@drawable/bg_button_press"
+                android:src="@drawable/ic_menu"
+                android:scaleType="center"
+                android:contentDescription="@string/btn_menu"/>
 
             <TextView
                 android:id="@+id/tvBranding"
@@ -75,18 +72,21 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@drawable/bg_card"
+                android:background="@drawable/bg_card_gradient_pink"
                 android:padding="16dp"
                 android:layout_marginEnd="6dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/session_label"
                     android:textColor="@color/primary"
-                    android:textSize="10sp"
-                    android:letterSpacing="0.15"
-                    android:textAllCaps="true"/>
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:id="@+id/tvSessionTimer"
@@ -96,8 +96,7 @@
                     android:textColor="@color/primary"
                     android:textSize="36sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.02"
-                    android:layout_marginTop="4dp"/>
+                    android:letterSpacing="0.02"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -111,10 +110,9 @@
                         android:layout_height="40dp"
                         android:text="@string/btn_start"
                         android:textColor="@color/on_primary"
-                        android:backgroundTint="@color/primary"
+                        android:background="@drawable/bg_button_primary_press"
                         android:textSize="11sp"
                         android:stateListAnimator="@null"
-                        android:background="@drawable/bg_button"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"/>
 
@@ -124,10 +122,10 @@
                         android:layout_height="40dp"
                         android:text="@string/btn_reset"
                         android:textColor="@color/primary"
+                        android:background="@drawable/bg_button_press"
                         android:backgroundTint="@color/surface_variant"
                         android:textSize="11sp"
                         android:stateListAnimator="@null"
-                        android:background="@drawable/bg_button"
                         android:layout_marginStart="8dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"/>
@@ -142,18 +140,21 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@drawable/bg_card"
+                android:background="@drawable/bg_card_gradient_yellow"
                 android:padding="16dp"
                 android:layout_marginStart="6dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/bpm_label"
                     android:textColor="@color/secondary"
-                    android:textSize="10sp"
-                    android:letterSpacing="0.15"
-                    android:textAllCaps="true"/>
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:id="@+id/tvBpm"
@@ -163,8 +164,7 @@
                     android:textColor="@color/secondary"
                     android:textSize="52sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.02"
-                    android:layout_marginTop="4dp"/>
+                    android:letterSpacing="0.02"/>
 
                 <Button
                     android:id="@+id/btnTap"
@@ -172,11 +172,10 @@
                     android:layout_height="110dp"
                     android:text="@string/btn_tap"
                     android:textColor="@color/on_secondary"
-                    android:backgroundTint="@color/secondary"
+                    android:background="@drawable/bg_button_secondary_press"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:stateListAnimator="@null"
-                    android:background="@drawable/bg_button"
                     android:layout_marginTop="12dp"/>
 
                 <Button
@@ -185,10 +184,10 @@
                     android:layout_height="40dp"
                     android:text="@string/btn_reset"
                     android:textColor="@color/secondary"
+                    android:background="@drawable/bg_button_press"
                     android:backgroundTint="@color/surface_variant"
                     android:textSize="11sp"
                     android:stateListAnimator="@null"
-                    android:background="@drawable/bg_button"
                     android:layout_marginTop="8dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"/>
@@ -204,7 +203,7 @@
         android:layout_width="220dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/surface"
+        android:background="@drawable/bg_card_glass"
         android:orientation="vertical"
         android:paddingTop="40dp"
         android:paddingBottom="16dp">
@@ -227,47 +226,89 @@
             android:background="@color/outline"
             android:layout_marginBottom="8dp"/>
 
-        <Button
+        <LinearLayout
             android:id="@+id/btnChords"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="@string/btn_chords"
-            android:textColor="@color/positive"
-            android:backgroundTint="@color/surface"
-            android:textSize="12sp"
-            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:letterSpacing="0.01"
-            android:stateListAnimator="@null"
-            android:background="@drawable/bg_button"/>
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_button_glass"
+            android:clickable="true"
+            android:focusable="true">
 
-        <Button
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_chords"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_chords"
+                android:textColor="@color/positive"
+                android:textSize="12sp"
+                android:letterSpacing="0.01"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/btnNotepad"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="NOTEPAD"
-            android:textColor="@color/tertiary"
-            android:backgroundTint="@color/surface"
-            android:textSize="12sp"
-            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:letterSpacing="0.01"
-            android:stateListAnimator="@null"
-            android:background="@drawable/bg_button"/>
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_button_glass"
+            android:clickable="true"
+            android:focusable="true">
 
-        <Button
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_notepad"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_notepad"
+                android:textColor="@color/tertiary"
+                android:textSize="12sp"
+                android:letterSpacing="0.01"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/btnProgressions"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="CHORD PROGRESSIONS"
-            android:textColor="@color/primary"
-            android:backgroundTint="@color/surface"
-            android:textSize="12sp"
-            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:letterSpacing="0.01"
-            android:stateListAnimator="@null"
-            android:background="@drawable/bg_button"/>
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_button_glass"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_progression"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_progressions"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:letterSpacing="0.01"/>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -276,31 +317,45 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/outline"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
-
-        <Button
+        <LinearLayout
             android:id="@+id/btnSettings"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="@string/settings_title"
-            android:textColor="@color/on_surface_variant"
-            android:backgroundTint="@color/surface"
-            android:textSize="12sp"
-            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:letterSpacing="0.01"
-            android:stateListAnimator="@null"
-            android:background="@drawable/bg_button"/>
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_button_glass"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_settings"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_title"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="12sp"
+                android:letterSpacing="0.01"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/outline"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/version"
+            android:text="@string/app_version"
             android:textColor="@color/on_surface_variant"
             android:textSize="9sp"
             android:paddingStart="20dp"

@@ -75,5 +75,16 @@
     <string name="settings_version_value">%1$s</string>
     <string name="settings_version_copied">Version copied to clipboard</string>
     <string name="settings_copy_hint">Tap to copy</string>
-    <string name="version">Version 1.0.2 (Pre Release)</string>
+    <string name="btn_menu">Menu</string>
+    <string name="btn_import">Import</string>
+    <string name="btn_bold">B</string>
+    <string name="btn_bullet">• List</string>
+    <string name="btn_add_section">+ Section</string>
+    <string name="btn_notepad">Notepad</string>
+    <string name="btn_progressions">Chord Progressions</string>
+    <string name="notepad_title">Notepad</string>
+    <string name="notepad_hint">Start typing…</string>
+    <string name="progression_title">Chord Progressions</string>
+    <string name="chords_label">Chords</string>
+    <string name="app_version">Radboard v1.0.2</string>
 </resources>

@@ -14,54 +14,60 @@
         android:gravity="center_vertical"
         android:background="@color/background">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"
-            android:background="@drawable/bg_button"
-            android:backgroundTint="@color/tertiary_container"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="← Back"
-            android:textColor="@color/tertiary"
-            android:textSize="9sp"
-            android:stateListAnimator="@null"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_button_press"
+            android:src="@drawable/ic_back"
+            android:scaleType="center"
+            android:contentDescription="@string/btn_back"/>
 
-        <TextView
-            android:id="@+id/tvSongTitle"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1"
-            android:text="Chord Progressions"
-            android:textColor="@color/on_background"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:gravity="center"/>
+            android:background="@drawable/bg_section_header_pink"
+            android:paddingStart="12dp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/tvSongTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/progression_title"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.02"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnTranspose"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:background="@drawable/bg_button"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_button_press"
             android:backgroundTint="@color/secondary_container"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:text="Transpose"
-            android:textColor="@color/secondary"
-            android:textSize="9sp"
             android:stateListAnimator="@null"
-            android:layout_marginEnd="8dp"/>
+            android:text="@string/btn_transpose"
+            android:textColor="@color/secondary"
+            android:textSize="9sp" />
 
         <Button
             android:id="@+id/btnAddSection"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:background="@drawable/bg_button"
+            android:background="@drawable/bg_button_press"
             android:backgroundTint="@color/primary_container"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:text="+ Section"
+            android:text="@string/btn_add_section"
             android:textColor="@color/primary"
             android:textSize="9sp"
             android:stateListAnimator="@null"/>

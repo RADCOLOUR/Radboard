@@ -4,40 +4,42 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class ChordsActivity : AppCompatActivity() {
 
-    private lateinit var btnBack: Button
+    private lateinit var btnBack: ImageButton
     private lateinit var btnByRoot: Button
     private lateinit var btnByType: Button
     private lateinit var btnGuitar: Button
     private lateinit var btnBass: Button
-    private lateinit var btnImport: Button
+    private lateinit var btnImport: ImageButton
+    private lateinit var btnTools: ImageButton
     private lateinit var selectorRow: LinearLayout
     private lateinit var secondarySelectorList: LinearLayout
     private lateinit var positionSelector: LinearLayout
     private lateinit var tvChordName: TextView
     private lateinit var tvChordDescription: TextView
     private lateinit var fretboardView: FretboardView
+
     private var byRoot = true
     private var showingGuitar = true
     private var selectedPrimary = ""
     private var selectedSecondary = ""
     private var selectedChordKey = ""
     private var currentPositionIndex = 0
+    private var highlightedChords: Set<String> = emptySet()
 
     val roots: List<String>
         get() = ChordRepository.getRoots()
@@ -56,8 +58,6 @@ class ChordsActivity : AppCompatActivity() {
     private val chordData: Map<String, ChordInfo>
         get() = ChordRepository.getAllChords()
 
-    private lateinit var btnTools: Button
-    private var highlightedChords: Set<String> = emptySet()
     companion object {
         private const val REQUEST_IMPORT = 1001
     }
@@ -77,19 +77,24 @@ class ChordsActivity : AppCompatActivity() {
         btnBass = findViewById(R.id.btnBass)
         btnImport = findViewById(R.id.btnImport)
         btnTools = findViewById(R.id.btnTools)
-        btnTools.setOnClickListener { showToolsMenu() }
         selectorRow = findViewById(R.id.selectorRow)
         secondarySelectorList = findViewById(R.id.secondarySelectorList)
         positionSelector = findViewById(R.id.positionSelector)
         tvChordName = findViewById(R.id.tvChordName)
         tvChordDescription = findViewById(R.id.tvChordDescription)
         fretboardView = findViewById(R.id.fretboardView)
-        btnBack.setOnClickListener { finish() }
+
+        btnBack.setOnClickListener {
+            finish()
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        }
         btnByRoot.setOnClickListener { byRoot = true; updateModeButtons(); buildPrimarySelector() }
         btnByType.setOnClickListener { byRoot = false; updateModeButtons(); buildPrimarySelector() }
         btnGuitar.setOnClickListener { showingGuitar = true; updateInstrumentButtons(); refreshFretboard() }
         btnBass.setOnClickListener { showingGuitar = false; updateInstrumentButtons(); refreshFretboard() }
         btnImport.setOnClickListener { openImportPicker() }
+        btnTools.setOnClickListener { showToolsMenu() }
 
         handleIncomingIntent(intent)
         buildPrimarySelector()
@@ -143,24 +148,27 @@ class ChordsActivity : AppCompatActivity() {
                 else ->
                     showToast("Unrecognised file type. Use .radguitar, .radbass or .radpack")
             }
-
         } catch (e: Exception) {
             showToast("Failed to import: ${e.message}")
         }
     }
 
     private fun showToolsMenu() {
-        KeyFinderDialog(
-            context = this,
-            onChordsHighlighted = { chords ->
-                highlightedChords = chords
-                buildPrimarySelector()
-            },
-            onDismiss = {
-                highlightedChords = emptySet()
-                buildPrimarySelector()
+        val options = arrayOf(
+            getString(R.string.tools_key_finder),
+            getString(R.string.tools_transposer)
+        )
+        AlertDialog.Builder(this)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showKeyFinder()
+                    1 -> showTransposer()
+                }
             }
-        ).show()
+            .show()
+            .apply {
+                window?.setBackgroundDrawableResource(R.drawable.bg_card)
+            }
     }
 
     private fun showKeyFinder() {
@@ -177,12 +185,46 @@ class ChordsActivity : AppCompatActivity() {
         ).show()
     }
 
+    private fun showTransposer() {
+        val prefs = getSharedPreferences("progression_prefs", MODE_PRIVATE)
+        val json = prefs.getString("sections", null)
+        val progressionChords = mutableListOf<String>()
+        if (json != null) {
+            try {
+                val array = org.json.JSONArray(json)
+                for (i in 0 until array.length()) {
+                    val obj = array.getJSONObject(i)
+                    val chordsArray = obj.getJSONArray("chords")
+                    for (j in 0 until chordsArray.length()) {
+                        val chord = chordsArray.getString(j)
+                        if (!progressionChords.contains(chord)) progressionChords.add(chord)
+                    }
+                }
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
+
+        TransposerDialog(
+            context = this,
+            chordData = chordData,
+            currentProgression = progressionChords,
+            onProgressionTransposed = { transposed ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.transposer_result_progression, transposed.joinToString(" → ")),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        ).show()
+    }
+
     private fun processRadPack(content: String, fileName: String) {
         val pack = RadChordParser.parseRadPack(content)
 
         if (pack.errors.isNotEmpty()) {
             writeErrorLog(fileName, pack.errors)
-            showToast("Import failed — error log saved to sdcard/radcolour/radlog/")
+            showToast("Import failed — error log saved to Documents/radcolour/radlog/")
             return
         }
 
@@ -201,7 +243,6 @@ class ChordsActivity : AppCompatActivity() {
             .setPositiveButton("Import") { _, _ ->
                 pack.roots.forEach { ChordRepository.addRootIfMissing(it) }
                 pack.types.forEach { ChordRepository.addTypeIfMissing(it) }
-
                 processNextChord(pack.chords, 0, 0, 0)
             }
             .setNegativeButton("Cancel", null)
@@ -285,10 +326,8 @@ class ChordsActivity : AppCompatActivity() {
             showToast("Imported ${chord.name}")
         }
     }
-    private fun writeErrorLog(
-        fileName: String,
-        errors: List<RadChordParser.ParseError>
-    ) {
+
+    private fun writeErrorLog(fileName: String, errors: List<RadChordParser.ParseError>) {
         try {
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val logFileName = "${fileName}_error_$timestamp.txt"
@@ -320,12 +359,11 @@ class ChordsActivity : AppCompatActivity() {
                 stream.write(sb.toString().toByteArray())
             }
 
-            showToast("Import failed — error log saved to Documents/radcolour/radlog/")
-
         } catch (e: Exception) {
             showToast("Import failed and could not write error log: ${e.message}")
         }
     }
+
     private fun getFileName(uri: Uri): String? {
         var name: String? = null
         contentResolver.query(uri, null, null, null, null)?.use { cursor ->
@@ -341,16 +379,16 @@ class ChordsActivity : AppCompatActivity() {
 
     private fun updateModeButtons() {
         btnByRoot.backgroundTintList = ContextCompat.getColorStateList(this, if (byRoot) R.color.blue else R.color.dark)
-        btnByRoot.setTextColor(if (byRoot) 0xFF000000.toInt() else 0xFF8BDCFF.toInt())
+        btnByRoot.setTextColor(if (byRoot) 0xFF000000.toInt() else 0xFF7DD6FF.toInt())
         btnByType.backgroundTintList = ContextCompat.getColorStateList(this, if (!byRoot) R.color.blue else R.color.dark)
-        btnByType.setTextColor(if (!byRoot) 0xFF000000.toInt() else 0xFF8BDCFF.toInt())
+        btnByType.setTextColor(if (!byRoot) 0xFF000000.toInt() else 0xFF7DD6FF.toInt())
     }
 
     private fun updateInstrumentButtons() {
         btnGuitar.backgroundTintList = ContextCompat.getColorStateList(this, if (showingGuitar) R.color.green else R.color.dark)
-        btnGuitar.setTextColor(if (showingGuitar) 0xFF000000.toInt() else 0xFFD4FFBD.toInt())
+        btnGuitar.setTextColor(if (showingGuitar) 0xFF000000.toInt() else 0xFFBFFFAA.toInt())
         btnBass.backgroundTintList = ContextCompat.getColorStateList(this, if (!showingGuitar) R.color.cream else R.color.dark)
-        btnBass.setTextColor(if (!showingGuitar) 0xFF000000.toInt() else 0xFFFFF2BD.toInt())
+        btnBass.setTextColor(if (!showingGuitar) 0xFF000000.toInt() else 0xFFFFE57A.toInt())
     }
 
     private fun buildPrimarySelector() {
@@ -368,8 +406,10 @@ class ChordsActivity : AppCompatActivity() {
             val btn = Button(this)
             btn.text = item
             btn.textSize = 11f
-            btn.setTextColor(0xFF8BDCFF.toInt())
+            btn.setTextColor(0xFF7DD6FF.toInt())
             btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.dark)
+            btn.background = getDrawable(R.drawable.bg_button_press)
+            btn.stateListAnimator = null
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -418,8 +458,9 @@ class ChordsActivity : AppCompatActivity() {
                     isImported -> 0xFFFFB3D9.toInt()
                     else -> 0xFF7DD6FF.toInt()
                 })
-
+                btn.background = getDrawable(R.drawable.bg_button_press)
                 btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.dark)
+                btn.stateListAnimator = null
                 val params = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -456,9 +497,11 @@ class ChordsActivity : AppCompatActivity() {
             val btn = Button(this)
             btn.text = if (index == 0) "Open" else "Pos ${index + 1}"
             btn.textSize = 10f
-            btn.setTextColor(if (index == currentPositionIndex) 0xFF000000.toInt() else 0xFF8BDCFF.toInt())
+            btn.setTextColor(if (index == currentPositionIndex) 0xFF000000.toInt() else 0xFF7DD6FF.toInt())
             btn.backgroundTintList = ContextCompat.getColorStateList(this,
                 if (index == currentPositionIndex) R.color.blue else R.color.dark)
+            btn.background = getDrawable(R.drawable.bg_button_press)
+            btn.stateListAnimator = null
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
@@ -487,6 +530,7 @@ class ChordsActivity : AppCompatActivity() {
         if (hasFocus) hideSystemUI()
     }
 
+    @Suppress("DEPRECATION")
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY

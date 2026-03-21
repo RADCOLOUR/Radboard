@@ -5,7 +5,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -14,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var btnBack: Button
+    private lateinit var btnBack: ImageButton
     private lateinit var switchPreRelease: Switch
     private lateinit var btnClearChords: Button
     private lateinit var tvVersion: TextView
@@ -32,6 +34,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
         setContentView(R.layout.activity_settings)
 
@@ -42,7 +45,8 @@ class SettingsActivity : AppCompatActivity() {
         btnClearChords = findViewById(R.id.btnClearChords)
         tvVersion = findViewById(R.id.tvVersion)
         cardVersion = findViewById(R.id.cardVersion)
-        tvVersion.text = getString(R.string.settings_version_value, BuildConfig.VERSION_NAME)
+
+        tvVersion.text = getString(R.string.settings_version_value, UpdateManager.getCurrentVersion(this))
 
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         switchPreRelease.isChecked = prefs.getBoolean(KEY_PRERELEASE, false)
@@ -70,12 +74,16 @@ class SettingsActivity : AppCompatActivity() {
 
         cardVersion.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("version", BuildConfig.VERSION_NAME)
+            val clip = ClipData.newPlainText("version", UpdateManager.getCurrentVersion(this))
             clipboard.setPrimaryClip(clip)
             Toast.makeText(this, getString(R.string.settings_version_copied), Toast.LENGTH_SHORT).show()
         }
 
-        btnBack.setOnClickListener { finish() }
+        btnBack.setOnClickListener {
+            finish()
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
