@@ -42,6 +42,41 @@
                 android:textStyle="bold"
                 android:gravity="center"/>
 
+            <LinearLayout
+                android:id="@+id/btnProjectPicker"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/bg_card_gradient_green"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tvActiveProject"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/positive"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="end"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_chords"
+                    android:layout_marginStart="6dp"/>
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tvClock"
                 android:layout_width="wrap_content"

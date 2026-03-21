@@ -34,6 +34,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnProgressions: LinearLayout
     private lateinit var btnSettings: LinearLayout
 
+    private lateinit var tvActiveProject: TextView
+    private lateinit var btnProjectPicker: LinearLayout
+
+    private val REQUEST_PROJECT_PICKER = 2001
+
     private val handler = Handler(Looper.getMainLooper())
     private val clockFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
@@ -50,6 +55,8 @@ class MainActivity : AppCompatActivity() {
             handler.postDelayed(this, 1000)
         }
     }
+
+
 
     private val sessionRunnable = object : Runnable {
         override fun run() {
@@ -84,6 +91,23 @@ class MainActivity : AppCompatActivity() {
         btnSettings = findViewById(R.id.btnSettings)
 
         handler.post(clockRunnable)
+
+        ProjectManager.init(this)
+
+        tvActiveProject = findViewById(R.id.tvActiveProject)
+        btnProjectPicker = findViewById(R.id.btnProjectPicker)
+
+        tvActiveProject.text = ProjectManager.getActiveProject(this)
+
+        btnProjectPicker.setOnClickListener {
+            startActivityForResult(
+                Intent(this, ProjectPickerActivity::class.java),
+                REQUEST_PROJECT_PICKER
+            )
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        }
+
 
         btnMenu.setOnClickListener {
             if (drawerLayout.isDrawerOpen(sidebar)) {
@@ -165,6 +189,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_PROJECT_PICKER) {
+            tvActiveProject.text = ProjectManager.getActiveProject(this)
+        }
+    }
     private fun handleSwipe(event: MotionEvent) {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

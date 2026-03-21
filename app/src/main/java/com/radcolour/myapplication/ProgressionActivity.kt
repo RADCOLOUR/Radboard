@@ -18,9 +18,6 @@ class ProgressionActivity : AppCompatActivity() {
     private lateinit var sectionsContainer: LinearLayout
     private lateinit var tvSongTitle: TextView
 
-    private val PREFS_NAME = "progression_prefs"
-    private val KEY_SECTIONS = "sections"
-
     private val defaultSectionTypes = listOf(
         "Intro", "Verse", "Pre-Chorus", "Chorus", "Bridge", "Outro"
     )
@@ -40,11 +37,14 @@ class ProgressionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_progression)
 
         ChordRepository.init(this)
+        ProjectManager.init(this)
 
         btnBack = findViewById(R.id.btnBack)
         btnAddSection = findViewById(R.id.btnAddSection)
         sectionsContainer = findViewById(R.id.sectionsContainer)
         tvSongTitle = findViewById(R.id.tvSongTitle)
+
+        tvSongTitle.text = getString(R.string.progression_title_project, ProjectManager.getActiveProject(this))
 
         loadSections()
         rebuildUI()
@@ -362,16 +362,14 @@ class ProgressionActivity : AppCompatActivity() {
             obj.put("chords", chords)
             array.put(obj)
         }
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-            .edit()
-            .putString(KEY_SECTIONS, array.toString())
-            .apply()
+        val project = ProjectManager.getActiveProject(this)
+        ProjectManager.writeProgression(project, array.toString())
     }
 
     private fun loadSections() {
         sections.clear()
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val json = prefs.getString(KEY_SECTIONS, null) ?: return
+        val project = ProjectManager.getActiveProject(this)
+        val json = ProjectManager.readProgression(project)
         try {
             val array = JSONArray(json)
             for (i in 0 until array.length()) {

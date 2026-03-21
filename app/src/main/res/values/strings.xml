@@ -86,5 +86,24 @@
     <string name="notepad_hint">Start typing…</string>
     <string name="progression_title">Chord Progressions</string>
     <string name="chords_label">Chords</string>
-    <string name="app_version">Radboard v1.0.2</string>
+    <string name="app_version">Radboard v1.0.3</string>
+    <string name="active_project_label">Active: %1$s</string>
+    <string name="btn_new_project">+ New</string>
+    <string name="btn_select">Select</string>
+    <string name="btn_active">Active</string>
+    <string name="btn_export">Export</string>
+    <string name="btn_rename">Rename</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_create">Create</string>
+    <string name="new_project_title">New Project</string>
+    <string name="rename_project_title">Rename Project</string>
+    <string name="delete_project_title">Delete Project</string>
+    <string name="delete_project_message">Delete \"%1$s\"? This cannot be undone.</string>
+    <string name="project_name_hint">Project name</string>
+    <string name="project_name_empty">Project name cannot be empty</string>
+    <string name="project_name_exists">A project with that name already exists</string>
+    <string name="cannot_delete_last">You must have at least one project</string>
+    <string name="export_project_title">Export Project</string>
+    <string name="export_failed">Export failed</string>
+    <string name="progression_title_project">%1$s — Progressions</string>
 </resources>

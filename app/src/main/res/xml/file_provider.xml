@@ -6,4 +6,10 @@
     <external-path
         name="external_storage"
         path="Android/data/"/>
+    <external-path
+        name="project_exports"
+        path="Documents/radcolour/exports/"/>
+    <external-path
+        name="project_files"
+        path="Documents/radcolour/projects/"/>
 </paths>

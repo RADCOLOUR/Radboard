@@ -20,14 +20,13 @@ class NotepadActivity : AppCompatActivity() {
     private lateinit var btnClear: Button
     private lateinit var etNotes: EditText
 
-    private val PREFS_NAME = "notepad_prefs"
-    private val KEY_NOTES = "notes_content"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         hideSystemUI()
         setContentView(R.layout.activity_notepad)
+
+        ProjectManager.init(this)
 
         btnBack = findViewById(R.id.btnBack)
         btnBold = findViewById(R.id.btnBold)
@@ -35,8 +34,7 @@ class NotepadActivity : AppCompatActivity() {
         btnClear = findViewById(R.id.btnClear)
         etNotes = findViewById(R.id.etNotes)
 
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        etNotes.setText(prefs.getString(KEY_NOTES, ""))
+        loadNotes()
 
         btnBack.setOnClickListener {
             saveNotes()
@@ -57,6 +55,16 @@ class NotepadActivity : AppCompatActivity() {
             etNotes.text.clear()
             saveNotes()
         }
+    }
+
+    private fun loadNotes() {
+        val project = ProjectManager.getActiveProject(this)
+        etNotes.setText(ProjectManager.readNotepad(project))
+    }
+
+    private fun saveNotes() {
+        val project = ProjectManager.getActiveProject(this)
+        ProjectManager.writeNotepad(project, etNotes.text.toString())
     }
 
     private fun applyBold() {
@@ -94,13 +102,6 @@ class NotepadActivity : AppCompatActivity() {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-    }
-
-    private fun saveNotes() {
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-            .edit()
-            .putString(KEY_NOTES, etNotes.text.toString())
-            .apply()
     }
 
     override fun onPause() {
