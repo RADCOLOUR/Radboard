@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:gravity="center_vertical"
+        android:background="@color/background">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/tertiary_container"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/btn_back"
+            android:textColor="@color/tertiary"
+            android:textSize="9sp"
+            android:stateListAnimator="@null"
+            android:contentDescription="@string/btn_back"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/chords_title"
+            android:textColor="@color/on_background"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_card_variant"
+            android:padding="2dp">
+
+            <Button
+                android:id="@+id/btnByRoot"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/by_root"
+                android:textColor="@color/on_tertiary"
+                android:backgroundTint="@color/tertiary"
+                android:textSize="9sp"
+                android:stateListAnimator="@null"
+                android:background="@drawable/bg_button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:contentDescription="@string/by_root"/>
+
+            <Button
+                android:id="@+id/btnByType"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/by_type"
+                android:textColor="@color/tertiary"
+                android:backgroundTint="@color/surface_variant"
+                android:textSize="9sp"
+                android:stateListAnimator="@null"
+                android:background="@drawable/bg_button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:contentDescription="@string/by_type"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnImport"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/primary_container"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Import"
+            android:textColor="@color/primary"
+            android:textSize="9sp"
+            android:stateListAnimator="@null"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/outline"/>
+
+    <!-- Selector Row -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:scrollbars="none"
+        android:background="@color/background"
+        android:contentDescription="@string/chord_selector_scroll">
+
+        <LinearLayout
+            android:id="@+id/selectorRow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="center_vertical"/>
+
+    </HorizontalScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/outline"/>
+
+    <!-- Main Content Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <!-- Left: Secondary selector list -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:layout_marginEnd="6dp">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/chord_list_scroll">
+
+                <LinearLayout
+                    android:id="@+id/secondarySelectorList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"/>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <!-- Centre: Fretboard -->
+        <com.radcolour.myapplication.FretboardView
+            android:id="@+id/fretboardView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/bg_card"
+            android:layout_marginEnd="6dp"/>
+
+        <!-- Right: Chord info + controls -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvChordName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/tertiary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.02"/>
+
+            <TextView
+                android:id="@+id/tvChordDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/on_surface_variant"
+                android:textSize="9sp"
+                android:layout_marginTop="2dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/outline"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Instrument Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_card_variant"
+                android:padding="2dp"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btnGuitar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/guitar"
+                    android:textColor="@color/on_positive"
+                    android:backgroundTint="@color/positive"
+                    android:textSize="9sp"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/bg_button"
+                    android:contentDescription="@string/guitar"/>
+
+                <Button
+                    android:id="@+id/btnBass"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/bass"
+                    android:textColor="@color/secondary"
+                    android:backgroundTint="@color/surface_variant"
+                    android:textSize="9sp"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/bg_button"
+                    android:contentDescription="@string/bass"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/outline"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="9sp"
+                android:letterSpacing="0.1"
+                android:textAllCaps="true"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:scrollbars="none"
+                android:layout_marginTop="4dp"
+                android:contentDescription="@string/position">
+
+                <LinearLayout
+                    android:id="@+id/positionSelector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"/>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

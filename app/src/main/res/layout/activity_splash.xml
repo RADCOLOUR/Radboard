@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Gradient background -->
+    <View
+        android:id="@+id/splashBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_splash_gradient"/>
+
+    <!-- Dark overlay that fades in to transition to dark theme -->
+    <View
+        android:id="@+id/darkOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:alpha="0"/>
+
+    <!-- Centre content -->
+    <LinearLayout
+        android:id="@+id/splashContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:alpha="0">
+
+        <!-- Geometric logo view -->
+        <com.radcolour.myapplication.LogoView
+            android:id="@+id/logoView"
+            android:layout_width="160dp"
+            android:layout_height="160dp"/>
+
+        <!-- App name -->
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/branding"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/inter"/>
+
+        <!-- Tagline -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your music. Your tools."
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp"
+            android:letterSpacing="0.1"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/inter"/>
+
+    </LinearLayout>
+
+    <!-- Spinner — shown after content appears -->
+    <ProgressBar
+        android:id="@+id/splashSpinner"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="40dp"
+        android:alpha="0"
+        android:indeterminateTint="#FFFFFF"/>
+
+</FrameLayout>

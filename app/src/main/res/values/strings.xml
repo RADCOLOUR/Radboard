@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Radcolour</string>
+    <string name="branding">RADCOLOUR</string>
+    <string name="session_label">SESSION</string>
+    <string name="bpm_label">BPM</string>
+    <string name="btn_start">START</string>
+    <string name="btn_stop">STOP</string>
+    <string name="btn_reset">RESET</string>
+    <string name="btn_tap">TAP</string>
+    <string name="btn_chords">CHORDS</string>
+    <string name="btn_scales">SCALES</string>
+    <string name="btn_back">BACK</string>
+    <string name="default_timer">00:00:00</string>
+    <string name="default_bpm">--</string>
+    <string name="chords_title">CHORDS</string>
+    <string name="by_root">BY ROOT</string>
+    <string name="by_type">BY TYPE</string>
+    <string name="chord_selector_scroll">Chord selector</string>
+    <string name="chord_list_scroll">Chord list</string>
+    <string name="guitar">GUITAR</string>
+    <string name="bass">BASS</string>
+    <string name="position">POSITION</string>
+</resources>
