@@ -39,4 +39,24 @@
     <string name="btn_update_now">Update Now</string>
     <string name="btn_install_now">Install Now</string>
     <string name="btn_skip">Skip</string>
+    <string name="key_finder_title">Key &amp; Scale Finder</string>
+    <string name="key_finder_root">Root Note</string>
+    <string name="key_finder_scale">Scale</string>
+    <string name="scale_notes_label">Notes: %1$s</string>
+    <string name="btn_highlight">Highlight Chords</string>
+    <string name="btn_clear">Clear</string>
+    <string name="transposer_title">Chord Transposer</string>
+    <string name="transposer_single">Single Chord</string>
+    <string name="transposer_progression">Progression</string>
+    <string name="transposer_pick_chord">Chord</string>
+    <string name="transposer_from">From</string>
+    <string name="transposer_no_progression">No progression saved yet. Add chords in the Chord Progressions screen first.</string>
+    <string name="transposer_current">Current: %1$s</string>
+    <string name="transposer_detected_key">Detected key: %1$s %2$s</string>
+    <string name="transposer_result_single">%1$s → %2$s</string>
+    <string name="transposer_result_progression">Transposed: %1$s</string>
+    <string name="btn_transpose">Transpose</string>
+    <string name="btn_tools">Tools</string>
+    <string name="tools_key_finder">Key &amp; Scale Finder</string>
+    <string name="tools_transposer">Chord Transposer</string>
 </resources>

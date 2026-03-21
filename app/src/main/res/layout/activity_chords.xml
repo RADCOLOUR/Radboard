@@ -78,6 +78,20 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/btnTools"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/secondary_container"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:stateListAnimator="@null"
+            android:text="@string/btn_tools"
+            android:textColor="@color/secondary"
+            android:textSize="9sp" />
+
+        <Button
             android:id="@+id/btnImport"
             android:layout_width="wrap_content"
             android:layout_height="34dp"

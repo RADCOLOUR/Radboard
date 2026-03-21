@@ -57,6 +57,8 @@ class ChordsActivity : AppCompatActivity() {
     private val chordData: Map<String, ChordInfo>
         get() = ChordRepository.getAllChords()
 
+    private lateinit var btnTools: Button
+    private var highlightedChords: Set<String> = emptySet()
     companion object {
         private const val REQUEST_IMPORT = 1001
     }
@@ -75,6 +77,8 @@ class ChordsActivity : AppCompatActivity() {
         btnGuitar = findViewById(R.id.btnGuitar)
         btnBass = findViewById(R.id.btnBass)
         btnImport = findViewById(R.id.btnImport)
+        btnTools = findViewById(R.id.btnTools)
+        btnTools.setOnClickListener { showToolsMenu() }
         selectorRow = findViewById(R.id.selectorRow)
         secondarySelectorList = findViewById(R.id.secondarySelectorList)
         positionSelector = findViewById(R.id.positionSelector)
@@ -149,6 +153,73 @@ class ChordsActivity : AppCompatActivity() {
         } catch (e: Exception) {
             showToast("Failed to import: ${e.message}")
         }
+    }
+
+    private fun showToolsMenu() {
+        val options = arrayOf(
+            getString(R.string.tools_key_finder),
+            getString(R.string.tools_transposer)
+        )
+        AlertDialog.Builder(this)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showKeyFinder()
+                    1 -> showTransposer()
+                }
+            }
+            .show()
+            .apply {
+                window?.setBackgroundDrawableResource(R.drawable.bg_card)
+            }
+    }
+
+    private fun showKeyFinder() {
+        KeyFinderDialog(
+            context = this,
+            onChordsHighlighted = { chords ->
+                highlightedChords = chords
+                buildPrimarySelector()
+            },
+            onDismiss = {
+                highlightedChords = emptySet()
+                buildPrimarySelector()
+            }
+        ).show()
+    }
+
+    private fun showTransposer() {
+        // Collect all chords from current progression
+        val prefs = getSharedPreferences("progression_prefs", MODE_PRIVATE)
+        val json = prefs.getString("sections", null)
+        val progressionChords = mutableListOf<String>()
+        if (json != null) {
+            try {
+                val array = org.json.JSONArray(json)
+                for (i in 0 until array.length()) {
+                    val obj = array.getJSONObject(i)
+                    val chordsArray = obj.getJSONArray("chords")
+                    for (j in 0 until chordsArray.length()) {
+                        val chord = chordsArray.getString(j)
+                        if (!progressionChords.contains(chord)) progressionChords.add(chord)
+                    }
+                }
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
+
+        TransposerDialog(
+            context = this,
+            chordData = chordData,
+            currentProgression = progressionChords,
+            onProgressionTransposed = { transposed ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.transposer_result_progression, transposed.joinToString(" → ")),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        ).show()
     }
 
     // -------------------------------------------------------------------------
@@ -417,7 +488,13 @@ class ChordsActivity : AppCompatActivity() {
                 btn.text = item
                 btn.textSize = 11f
                 val isImported = ChordRepository.isImported(key)
-                btn.setTextColor(if (isImported) 0xFFFFBDE1.toInt() else 0xFF8BDCFF.toInt())
+                val isHighlighted = highlightedChords.contains(key)
+                btn.setTextColor(when {
+                    isHighlighted -> 0xFFBFFFAA.toInt()  // green for in-key chords
+                    isImported -> 0xFFFFB3D9.toInt()      // pink for imported
+                    else -> 0xFF7DD6FF.toInt()            // default blue
+                })
+
                 btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.dark)
                 val params = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,

@@ -1,117 +1,83 @@
 author: Radcolour
-description: Built-in chord library for the Radcolour music app.
+description: Built-in chord library for Radboard.
 
-roots: C, C#, D, D#, E, F, F#, G, G#, A, A#, B
+roots: C, D, E, F, G, A, B
 types: Major, Minor, 7th, Maj7, Min7, Sus2, Sus4, Aug, Dim, Compound
 
 [C Major] Bright and happy. One of the most common chords.
 guitar: x32010
-guitar: 013320@3
 bass: x321
-bass: 0133@3
 
 [C Minor] Dark and emotional. Common in sad or intense songs.
 guitar: x13321@3 barre:1-5
-guitar: 133111@8 barre:0-5
 bass: x133@3 barre:1-3
-bass: 1331@8 barre:0-3
 
 [G Major] Warm and full. One of the most common guitar chords.
 guitar: 320003
-guitar: 133211@3 barre:0-5
 bass: 3200
-bass: 1332@3 barre:0-3
 
 [G Minor] Dark and serious. Common in rock and classical.
 guitar: 133111@3 barre:0-5
-guitar: 133111@5 barre:0-5
 bass: 1331@3 barre:0-3
-bass: 1331@5 barre:0-3
 
 [D Major] Bright and triumphant. Essential guitar chord.
 guitar: xx0232
-guitar: 133211@5 barre:0-5
 bass: xx02
-bass: 1332@5 barre:0-3
 
 [D Minor] Sad and haunting. One of the most emotional chords.
 guitar: xx0231
-guitar: 133111@5 barre:0-5
 bass: xx02
-bass: 1331@5 barre:0-3
 
 [A Major] Bright and punchy. Essential for rock and pop.
 guitar: x02220
-guitar: 133211@5 barre:0-5
 bass: x022
-bass: 1332@5 barre:0-3
 
 [A Minor] Melancholic and natural. Very common in all genres.
 guitar: x02210
-guitar: 133111@5 barre:0-5
 bass: x022
-bass: 1331@5 barre:0-3
 
 [E Major] Full and powerful. One of the easiest guitar chords.
 guitar: 022100
-guitar: 133211@7 barre:0-5
 bass: 0221
-bass: 1332@7 barre:0-3
 
 [E Minor] Dark and brooding. Easiest minor chord on guitar.
 guitar: 022000
-guitar: 133111@7 barre:0-5
 bass: 0220
-bass: 1331@7 barre:0-3
 
 [F Major] Warm and full. The first barre chord most guitarists learn.
 guitar: 133211@1 barre:0-5
-guitar: 013320@8
 bass: 1332@1 barre:0-3
-bass: 0133@8
 
 [F Minor] Dark and intense. A challenging but essential barre chord.
 guitar: 133111@1 barre:0-5
-guitar: 133111@8 barre:0-5
 bass: 1331@1 barre:0-3
-bass: 1331@8 barre:0-3
 
 [B Major] Bright and bold. A common barre chord in pop and rock.
 guitar: x13331@2 barre:1-5
-guitar: 133211@7 barre:0-5
 bass: x133@2 barre:1-3
-bass: 1332@7 barre:0-3
 
 [B Minor] Melancholic and tense. Very common in pop and rock.
 guitar: x13321@2 barre:1-5
-guitar: 133111@7 barre:0-5
 bass: x133@2 barre:1-3
-bass: 1331@7 barre:0-3
 
 [C 7th] Bluesy and tense. Wants to resolve to F major.
 guitar: x32310
-guitar: 133121@3
 bass: x323
-bass: 1331@3
 
 [G 7th] Bluesy and bright. Very common in blues and rock.
 guitar: 320001
-guitar: 133121@3
 bass: 3201
-bass: 1331@3
 
 [C Sus2] Open and airy. Neither happy nor sad.
 guitar: x30033
-guitar: 133111@3 barre:0-5
 bass: x300
-bass: 1331@3 barre:0-3
 
 [C Sus4] Tense and suspended. Wants to resolve.
 guitar: x33010
-guitar: 133111@3 barre:0-5
 bass: x331
-bass: 1331@3 barre:0-3
 
-[G/F] G major with F in the bass. | root:G type:Compound
+[G/F] G major with F in the bass.
+root: G
+type: Compound
 guitar: 120003
 bass: 1200

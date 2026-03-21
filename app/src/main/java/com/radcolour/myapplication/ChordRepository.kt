@@ -12,7 +12,7 @@ object ChordRepository {
     private var builtInChords: Map<String, ChordsActivity.ChordInfo> = emptyMap()
     private var importedChords: MutableMap<String, ChordsActivity.ChordInfo> = mutableMapOf()
 
-    private var _roots: List<String> = listOf("C","C#","D","D#","E","F","F#","G","G#","A","A#","B")
+    private var _roots: List<String> = listOf("C","D","E","F","G","A","B")
     private var _types: List<String> = listOf("Major","Minor","7th","Maj7","Min7","Sus2","Sus4","Aug","Dim","Compound")
 
     private var initialised = false
