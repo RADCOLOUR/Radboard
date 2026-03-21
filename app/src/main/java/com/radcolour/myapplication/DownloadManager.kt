@@ -18,11 +18,6 @@ object ApkDownloader {
     private var onComplete: (() -> Unit)? = null
     private var onError: (() -> Unit)? = null
 
-    // -------------------------------------------------------------------------
-    // Check if a previously downloaded update APK already exists
-    // Returns the file if found and newer than current version, null otherwise
-    // -------------------------------------------------------------------------
-
     fun findExistingUpdate(context: Context): File? {
         val dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
             ?: return null
@@ -38,14 +33,10 @@ object ApkDownloader {
                 val version = file.name
                     .removePrefix("radboard-")
                     .removeSuffix(".apk")
-                UpdateManager.isVersionNewer(version, UpdateManager.CURRENT_VERSION)
+                UpdateManager.isVersionNewer(version, BuildConfig.VERSION_NAME)
             }
             ?.maxByOrNull { it.lastModified() }
     }
-
-    // -------------------------------------------------------------------------
-    // Download
-    // -------------------------------------------------------------------------
 
     fun download(
         context: Context,
@@ -59,7 +50,6 @@ object ApkDownloader {
         this.onComplete = onComplete
         this.onError = onError
 
-        // Clean up old radboard APKs before downloading
         val dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
         dir?.listFiles()
             ?.filter { it.name.startsWith("radboard-") && it.name.endsWith(".apk") }
@@ -97,10 +87,6 @@ object ApkDownloader {
             onError()
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Progress polling — handles completion internally, no broadcast receiver
-    // -------------------------------------------------------------------------
 
     private fun startProgressPolling(context: Context, dm: DownloadManager, version: String) {
         Thread {
@@ -141,7 +127,6 @@ object ApkDownloader {
                                     onComplete?.invoke()
                                 }
                                 Thread.sleep(800)
-                                // Find the downloaded file by version name and install
                                 val apkFile = File(
                                     context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
                                     "radboard-$version.apk"
@@ -180,10 +165,6 @@ object ApkDownloader {
             }
         }.start()
     }
-
-    // -------------------------------------------------------------------------
-    // Install
-    // -------------------------------------------------------------------------
 
     fun installApk(context: Context, apkFile: File) {
         android.util.Log.d("RADBOARD_UPDATE", "installApk: ${apkFile.absolutePath}")

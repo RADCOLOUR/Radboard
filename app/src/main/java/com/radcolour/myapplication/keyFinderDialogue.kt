@@ -16,7 +16,6 @@ class KeyFinderDialog(
 
     private val notes = MusicTheory.ALL_NOTES
     private val scales = MusicTheory.SCALES.keys.toList()
-
     private var selectedRoot = "C"
     private var selectedScale = "Major"
 
@@ -27,7 +26,6 @@ class KeyFinderDialog(
             setBackgroundColor(0xFF1A1A1A.toInt())
         }
 
-        // Root note label
         layout.addView(TextView(context).apply {
             text = context.getString(R.string.key_finder_root)
             textSize = 10f
@@ -40,7 +38,6 @@ class KeyFinderDialog(
             ).also { it.bottomMargin = 8 }
         })
 
-        // Root note selector
         val rootScroll = HorizontalScrollView(context).apply {
             isHorizontalScrollBarEnabled = false
             layoutParams = LinearLayout.LayoutParams(
@@ -74,7 +71,6 @@ class KeyFinderDialog(
         rootScroll.addView(rootRow)
         layout.addView(rootScroll)
 
-        // Scale label
         layout.addView(TextView(context).apply {
             text = context.getString(R.string.key_finder_scale)
             textSize = 10f
@@ -87,7 +83,6 @@ class KeyFinderDialog(
             ).also { it.bottomMargin = 8 }
         })
 
-        // Scale selector
         val scaleContainer = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -117,7 +112,6 @@ class KeyFinderDialog(
         }
         layout.addView(scaleContainer)
 
-        // Scale notes preview
         val tvScaleNotes = TextView(context).apply {
             textSize = 10f
             setTextColor(0xFF7DD6FF.toInt())
@@ -129,7 +123,6 @@ class KeyFinderDialog(
         updateScaleNotes(tvScaleNotes)
         layout.addView(tvScaleNotes)
 
-        // Update scale notes when root or scale changes
         rootButtons.forEach { btn ->
             btn.setOnClickListener {
                 selectedRoot = btn.text.toString()

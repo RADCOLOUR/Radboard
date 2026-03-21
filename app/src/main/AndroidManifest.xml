@@ -96,7 +96,6 @@
             android:exported="false"
             android:screenOrientation="landscape"/>
 
-        <!-- FileProvider for APK install -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

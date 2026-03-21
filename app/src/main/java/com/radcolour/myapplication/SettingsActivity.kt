@@ -42,20 +42,15 @@ class SettingsActivity : AppCompatActivity() {
         btnClearChords = findViewById(R.id.btnClearChords)
         tvVersion = findViewById(R.id.tvVersion)
         cardVersion = findViewById(R.id.cardVersion)
-
-        // Set version text
         tvVersion.text = getString(R.string.settings_version_value, BuildConfig.VERSION_NAME)
 
-        // Load saved settings
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         switchPreRelease.isChecked = prefs.getBoolean(KEY_PRERELEASE, false)
 
-        // Pre-release toggle
         switchPreRelease.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean(KEY_PRERELEASE, isChecked).apply()
         }
 
-        // Clear imported chords
         btnClearChords.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle(R.string.settings_clear_chords_confirm_title)
@@ -73,7 +68,6 @@ class SettingsActivity : AppCompatActivity() {
                 }
         }
 
-        // Version — tap to copy
         cardVersion.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("version", BuildConfig.VERSION_NAME)

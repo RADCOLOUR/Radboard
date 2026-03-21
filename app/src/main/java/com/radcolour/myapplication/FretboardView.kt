@@ -1,5 +1,6 @@
 package com.radcolour.myapplication
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -25,7 +26,6 @@ class FretboardView @JvmOverloads constructor(
     private var position: ChordPosition? = null
     private var stringCount = 6
 
-    // MD3 surface as fretboard background
     private val boardPaint = Paint().apply {
         color = 0xFF1A1A1A.toInt()
         style = Paint.Style.FILL
@@ -43,7 +43,6 @@ class FretboardView @JvmOverloads constructor(
         isAntiAlias = true
     }
 
-    // Tertiary blue for dots
     private val dotPaint = Paint().apply {
         color = 0xFF7DD6FF.toInt()
         isAntiAlias = true
@@ -56,7 +55,6 @@ class FretboardView @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
 
-    // Error red for muted
     private val mutedPaint = Paint().apply {
         color = 0xFFFF5449.toInt()
         strokeWidth = 2f
@@ -64,7 +62,6 @@ class FretboardView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
 
-    // Tertiary for open string circle
     private val openPaint = Paint().apply {
         color = 0xFF7DD6FF.toInt()
         strokeWidth = 2f
@@ -72,7 +69,6 @@ class FretboardView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
 
-    // Dark text on light dot
     private val textPaint = Paint().apply {
         color = 0xFF003549.toInt()
         isAntiAlias = true
@@ -92,25 +88,21 @@ class FretboardView @JvmOverloads constructor(
         invalidate()
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val pos = position ?: return
-
         val padding = 40f
         val topPadding = 60f
         val bottomPadding = 20f
-
         val totalWidth = width.toFloat() - padding * 2
         val totalHeight = height.toFloat() - topPadding - bottomPadding
-
         val stringSpacing = totalWidth / (stringCount - 1)
         val fretCount = 5
         val fretSpacing = totalHeight / fretCount
-
         val dotRadius = stringSpacing * 0.35f
         val indicatorRadius = stringSpacing * 0.18f
 
-        // Step 1: Draw nut or fret number
         if (pos.startFret == 1) {
             canvas.drawLine(padding, topPadding, padding + totalWidth, topPadding, nutPaint)
         } else {
@@ -123,19 +115,16 @@ class FretboardView @JvmOverloads constructor(
             )
         }
 
-        // Step 2: Draw fret lines
         for (i in 1..fretCount) {
             val y = topPadding + i * fretSpacing
             canvas.drawLine(padding, y, padding + totalWidth, y, linePaint)
         }
 
-        // Step 3: Draw string lines
         for (i in 0 until stringCount) {
             val x = padding + i * stringSpacing
             canvas.drawLine(x, topPadding, x, topPadding + totalHeight, linePaint)
         }
 
-        // Step 4: Draw barre bar
         if (pos.barreFret >= 0 && pos.barreFromString >= 0 && pos.barreToString >= 0) {
             val fretIndex = pos.barreFret - pos.startFret
             val y = topPadding + fretIndex * fretSpacing + fretSpacing / 2
@@ -150,7 +139,6 @@ class FretboardView @JvmOverloads constructor(
             canvas.drawRoundRect(rect, dotRadius, dotRadius, barrePaint)
         }
 
-        // Step 5: Draw individual finger dots
         for (i in 0 until stringCount) {
             if (pos.strings[i] > 0) {
                 if (pos.barreFret >= 0
@@ -172,7 +160,6 @@ class FretboardView @JvmOverloads constructor(
             }
         }
 
-        // Step 6: Draw open/muted indicators
         for (i in 0 until stringCount) {
             val x = padding + i * stringSpacing
             val y = topPadding - indicatorRadius - 4f

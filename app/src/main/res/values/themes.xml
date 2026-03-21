@@ -3,7 +3,6 @@
 
     <style name="Theme.Radcolour" parent="Theme.AppCompat.NoActionBar">
 
-        <!-- Colour tokens -->
         <item name="android:windowBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorPrimary">@color/primary</item>
@@ -11,19 +10,11 @@
         <item name="colorAccent">@color/tertiary</item>
         <item name="android:textColorPrimary">@color/on_background</item>
         <item name="android:textColorSecondary">@color/on_surface</item>
-
-        <!-- Inter font -->
         <item name="android:fontFamily">@font/inter</item>
-
-        <!-- No title bar -->
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-
-        <!-- Full screen -->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-
-        <!-- Button style -->
         <item name="buttonStyle">@style/Widget.Radcolour.Button</item>
 
     </style>

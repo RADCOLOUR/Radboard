@@ -17,10 +17,6 @@ object ChordRepository {
 
     private var initialised = false
 
-    // -------------------------------------------------------------------------
-    // Init
-    // -------------------------------------------------------------------------
-
     fun init(context: Context) {
         if (initialised) return
         val (chords, roots, types) = loadBuiltIn(context)
@@ -30,10 +26,6 @@ object ChordRepository {
         importedChords = loadImported(context).toMutableMap()
         initialised = true
     }
-
-    // -------------------------------------------------------------------------
-    // Public accessors
-    // -------------------------------------------------------------------------
 
     fun getAllChords(): Map<String, ChordsActivity.ChordInfo> = builtInChords + importedChords
 
@@ -54,11 +46,6 @@ object ChordRepository {
     fun addTypeIfMissing(type: String) {
         if (!_types.contains(type)) _types = _types + type
     }
-
-    // -------------------------------------------------------------------------
-    // Import
-    // -------------------------------------------------------------------------
-
     fun importChord(context: Context, chord: ChordsActivity.ChordInfo) {
         importedChords[chord.name] = chord
         saveImported(context)
@@ -79,14 +66,9 @@ object ChordRepository {
         saveImported(context)
     }
 
-    /** Returns true if a chord with this name already exists in built-ins or imports */
     fun conflicts(name: String): Boolean {
         return builtInChords.containsKey(name) || importedChords.containsKey(name)
     }
-
-    // -------------------------------------------------------------------------
-    // Built-in loader
-    // -------------------------------------------------------------------------
 
     private data class BuiltInResult(
         val chords: Map<String, ChordsActivity.ChordInfo>,
@@ -105,11 +87,6 @@ object ChordRepository {
             BuiltInResult(emptyMap(), emptyList(), emptyList())
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Persistence
-    // -------------------------------------------------------------------------
-
     private fun saveImported(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val array = JSONArray()

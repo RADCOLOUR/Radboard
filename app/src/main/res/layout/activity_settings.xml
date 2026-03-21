@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical">
 
-    <!-- Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -39,7 +39,6 @@
             android:letterSpacing="0.02"
             android:gravity="center"/>
 
-        <!-- Spacer to balance back button -->
         <View
             android:layout_width="60dp"
             android:layout_height="match_parent"/>
@@ -51,7 +50,6 @@
         android:layout_height="1dp"
         android:background="@color/outline"/>
 
-    <!-- Settings content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -63,7 +61,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Updates section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +72,6 @@
                 android:paddingStart="4dp"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Pre-release toggle card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -114,11 +110,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:thumbTint="@color/tertiary"
-                    android:trackTint="@color/tertiary_container"/>
+                    android:trackTint="@color/tertiary_container"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             </LinearLayout>
 
-            <!-- Data section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -131,7 +127,6 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Clear imported chords card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -180,7 +175,6 @@
 
             </LinearLayout>
 
-            <!-- About section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -193,7 +187,6 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Version card -->
             <LinearLayout
                 android:id="@+id/cardVersion"
                 android:layout_width="match_parent"

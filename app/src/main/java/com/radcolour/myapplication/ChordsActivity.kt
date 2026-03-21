@@ -32,7 +32,6 @@ class ChordsActivity : AppCompatActivity() {
     private lateinit var tvChordName: TextView
     private lateinit var tvChordDescription: TextView
     private lateinit var fretboardView: FretboardView
-
     private var byRoot = true
     private var showingGuitar = true
     private var selectedPrimary = ""
@@ -85,7 +84,6 @@ class ChordsActivity : AppCompatActivity() {
         tvChordName = findViewById(R.id.tvChordName)
         tvChordDescription = findViewById(R.id.tvChordDescription)
         fretboardView = findViewById(R.id.fretboardView)
-
         btnBack.setOnClickListener { finish() }
         btnByRoot.setOnClickListener { byRoot = true; updateModeButtons(); buildPrimarySelector() }
         btnByType.setOnClickListener { byRoot = false; updateModeButtons(); buildPrimarySelector() }
@@ -101,10 +99,6 @@ class ChordsActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         intent?.let { handleIncomingIntent(it) }
     }
-
-    // -------------------------------------------------------------------------
-    // File import
-    // -------------------------------------------------------------------------
 
     private fun openImportPicker() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -183,16 +177,9 @@ class ChordsActivity : AppCompatActivity() {
         ).show()
     }
 
-
-
-    // -------------------------------------------------------------------------
-    // .radpack import — confirmation popup + per-chord conflict dialogs
-    // -------------------------------------------------------------------------
-
     private fun processRadPack(content: String, fileName: String) {
         val pack = RadChordParser.parseRadPack(content)
 
-        // If there are parse errors, write log and reject
         if (pack.errors.isNotEmpty()) {
             writeErrorLog(fileName, pack.errors)
             showToast("Import failed — error log saved to sdcard/radcolour/radlog/")
@@ -204,7 +191,6 @@ class ChordsActivity : AppCompatActivity() {
             return
         }
 
-        // Build confirmation message
         val authorLine = if (pack.author.isNotEmpty()) "Author: ${pack.author}\n" else ""
         val descLine = if (pack.description.isNotEmpty()) "${pack.description}\n\n" else ""
         val message = "${authorLine}${descLine}This pack contains ${pack.chords.size} chord(s). Import?"
@@ -213,17 +199,15 @@ class ChordsActivity : AppCompatActivity() {
             .setTitle("Import Chord Pack")
             .setMessage(message)
             .setPositiveButton("Import") { _, _ ->
-                // Add new roots/types to whitelist
                 pack.roots.forEach { ChordRepository.addRootIfMissing(it) }
                 pack.types.forEach { ChordRepository.addTypeIfMissing(it) }
-                // Start processing chords one by one
+
                 processNextChord(pack.chords, 0, 0, 0)
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    /** Recursively processes chords one at a time, showing conflict dialogs as needed */
     private fun processNextChord(
         chords: List<RadChordParser.ParsedChord>,
         index: Int,
@@ -231,7 +215,6 @@ class ChordsActivity : AppCompatActivity() {
         skipped: Int
     ) {
         if (index >= chords.size) {
-            // All done
             buildPrimarySelector()
             showToast("Imported $imported chord(s), skipped $skipped")
             return
@@ -240,12 +223,10 @@ class ChordsActivity : AppCompatActivity() {
         val parsed = chords[index]
         val chord = RadChordParser.toChordInfo(parsed)
 
-        // Add root/type to whitelist if needed
         if (chord.root.isNotEmpty()) ChordRepository.addRootIfMissing(chord.root)
         if (chord.type.isNotEmpty()) ChordRepository.addTypeIfMissing(chord.type)
 
         if (ChordRepository.conflicts(chord.name)) {
-            // Ask user whether to overwrite
             AlertDialog.Builder(this)
                 .setTitle("Chord Already Exists")
                 .setMessage("\"${chord.name}\" already exists. Overwrite it?")
@@ -262,10 +243,6 @@ class ChordsActivity : AppCompatActivity() {
             processNextChord(chords, index + 1, imported + 1, skipped)
         }
     }
-
-    // -------------------------------------------------------------------------
-    // .radguitar / .radbass import
-    // -------------------------------------------------------------------------
 
     private fun processRadGuitar(content: String) {
         val parsed = RadChordParser.parseRadGuitar(content)
@@ -308,11 +285,6 @@ class ChordsActivity : AppCompatActivity() {
             showToast("Imported ${chord.name}")
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Error log writer
-    // -------------------------------------------------------------------------
-
     private fun writeErrorLog(
         fileName: String,
         errors: List<RadChordParser.ParseError>
@@ -354,11 +326,6 @@ class ChordsActivity : AppCompatActivity() {
             showToast("Import failed and could not write error log: ${e.message}")
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
-
     private fun getFileName(uri: Uri): String? {
         var name: String? = null
         contentResolver.query(uri, null, null, null, null)?.use { cursor ->
@@ -371,10 +338,6 @@ class ChordsActivity : AppCompatActivity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-
-    // -------------------------------------------------------------------------
-    // UI
-    // -------------------------------------------------------------------------
 
     private fun updateModeButtons() {
         btnByRoot.backgroundTintList = ContextCompat.getColorStateList(this, if (byRoot) R.color.blue else R.color.dark)
@@ -431,10 +394,8 @@ class ChordsActivity : AppCompatActivity() {
         val items = if (byRoot) chordTypes else roots
 
         items.forEach { item ->
-            // Standard key e.g. "G Major"
             val standardKey = if (byRoot) "$primary $item" else "$item $primary"
 
-            // Also check chords with explicit root= and type= fields
             val matchingChords = chordData.entries.filter { (_, chord) ->
                 if (byRoot) chord.root == primary && chord.type == item
                 else chord.root == item && chord.type == primary
@@ -453,9 +414,9 @@ class ChordsActivity : AppCompatActivity() {
                 val isImported = ChordRepository.isImported(key)
                 val isHighlighted = highlightedChords.contains(key)
                 btn.setTextColor(when {
-                    isHighlighted -> 0xFFBFFFAA.toInt()  // green for in-key chords
-                    isImported -> 0xFFFFB3D9.toInt()      // pink for imported
-                    else -> 0xFF7DD6FF.toInt()            // default blue
+                    isHighlighted -> 0xFFBFFFAA.toInt()
+                    isImported -> 0xFFFFB3D9.toInt()
+                    else -> 0xFF7DD6FF.toInt()
                 })
 
                 btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.dark)

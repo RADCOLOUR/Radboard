@@ -4,10 +4,6 @@ object MusicTheory {
 
     val ALL_NOTES = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
 
-    // -------------------------------------------------------------------------
-    // Scale intervals — semitone steps from root
-    // -------------------------------------------------------------------------
-
     val SCALES = mapOf(
         "Major"           to listOf(0, 2, 4, 5, 7, 9, 11),
         "Natural Minor"   to listOf(0, 2, 3, 5, 7, 8, 10),
@@ -19,8 +15,6 @@ object MusicTheory {
         "Mixolydian"      to listOf(0, 2, 4, 5, 7, 9, 10)
     )
 
-    // Chord types that naturally occur on each scale degree
-    // These are used to suggest which chord types fit in a key
     val SCALE_CHORD_TYPES = mapOf(
         "Major" to mapOf(
             0 to "Major", 2 to "Minor", 4 to "Minor",
@@ -56,11 +50,6 @@ object MusicTheory {
         )
     )
 
-    // -------------------------------------------------------------------------
-    // Get all chord names that fit in a given key and scale
-    // Returns a set of chord keys e.g. "G Major", "A Minor"
-    // -------------------------------------------------------------------------
-
     fun getChordsInKey(root: String, scale: String): Set<String> {
         val rootIndex = ALL_NOTES.indexOf(root)
         if (rootIndex < 0) return emptySet()
@@ -76,11 +65,6 @@ object MusicTheory {
 
         return result
     }
-
-    // -------------------------------------------------------------------------
-    // Get scale notes for a given root and scale
-    // -------------------------------------------------------------------------
-
     fun getScaleNotes(root: String, scale: String): List<String> {
         val rootIndex = ALL_NOTES.indexOf(root)
         if (rootIndex < 0) return emptyList()
@@ -90,34 +74,20 @@ object MusicTheory {
             ALL_NOTES[(rootIndex + semitones) % 12]
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Transpose a single chord name to a new root
-    // e.g. transposeChord("G Major", "G", "D") -> "D Major"
-    // -------------------------------------------------------------------------
-
     fun transposeChord(chordName: String, fromRoot: String, toRoot: String): String {
         val fromIndex = ALL_NOTES.indexOf(fromRoot)
         val toIndex = ALL_NOTES.indexOf(toRoot)
         if (fromIndex < 0 || toIndex < 0) return chordName
 
         val semitones = (toIndex - fromIndex + 12) % 12
-
-        // Find the chord's root note
         val chordRoot = ALL_NOTES.firstOrNull { chordName.startsWith(it) } ?: return chordName
         val chordType = chordName.removePrefix(chordRoot).trim()
-
         val chordRootIndex = ALL_NOTES.indexOf(chordRoot)
         val newRootIndex = (chordRootIndex + semitones) % 12
         val newRoot = ALL_NOTES[newRootIndex]
 
         return "$newRoot $chordType".trim()
     }
-
-    // -------------------------------------------------------------------------
-    // Transpose a list of chord names by a number of semitones
-    // -------------------------------------------------------------------------
-
     fun transposeChords(chords: List<String>, semitones: Int): List<String> {
         return chords.map { chord ->
             val chordRoot = ALL_NOTES.firstOrNull { chord.startsWith(it) }
@@ -128,23 +98,12 @@ object MusicTheory {
             "${ALL_NOTES[newIndex]} $chordType".trim()
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Get semitone distance between two roots
-    // -------------------------------------------------------------------------
-
     fun semitoneseBetween(from: String, to: String): Int {
         val fromIndex = ALL_NOTES.indexOf(from)
         val toIndex = ALL_NOTES.indexOf(to)
         if (fromIndex < 0 || toIndex < 0) return 0
         return (toIndex - fromIndex + 12) % 12
     }
-
-    // -------------------------------------------------------------------------
-    // Detect the most likely key from a list of chords
-    // Returns the best matching root + scale pair
-    // -------------------------------------------------------------------------
-
     fun detectKey(chords: List<String>): Pair<String, String>? {
         if (chords.isEmpty()) return null
 

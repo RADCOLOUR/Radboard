@@ -3,13 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Gradient background -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_splash_gradient"/>
 
-    <!-- Dark overlay -->
     <View
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
@@ -17,7 +15,6 @@
         android:background="#000000"
         android:alpha="0"/>
 
-    <!-- Centre content -->
     <LinearLayout
         android:id="@+id/splashContent"
         android:layout_width="wrap_content"
@@ -27,7 +24,6 @@
         android:gravity="center"
         android:alpha="0">
 
-        <!-- App name as logo -->
         <TextView
             android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
@@ -39,7 +35,6 @@
             android:letterSpacing="0.05"
             android:fontFamily="@font/inter"/>
 
-        <!-- Tagline -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +47,6 @@
 
     </LinearLayout>
 
-    <!-- Bottom status area -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,7 +57,6 @@
         android:paddingStart="48dp"
         android:paddingEnd="48dp">
 
-        <!-- Status text -->
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
@@ -75,7 +68,6 @@
             android:layout_marginBottom="12dp"
             android:fontFamily="@font/inter"/>
 
-        <!-- Spinner -->
         <ProgressBar
             android:id="@+id/splashSpinner"
             android:layout_width="28dp"
@@ -83,7 +75,6 @@
             android:alpha="0"
             android:indeterminateTint="#FFFFFF"/>
 
-        <!-- Download progress bar -->
         <ProgressBar
             android:id="@+id/downloadProgress"
             style="@android:style/Widget.ProgressBar.Horizontal"
@@ -95,7 +86,6 @@
             android:progress="0"
             android:visibility="gone"/>
 
-        <!-- Download percentage -->
         <TextView
             android:id="@+id/tvDownloadPercent"
             android:layout_width="wrap_content"

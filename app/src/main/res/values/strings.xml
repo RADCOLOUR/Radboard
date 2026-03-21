@@ -75,4 +75,5 @@
     <string name="settings_version_value">%1$s</string>
     <string name="settings_version_copied">Version copied to clipboard</string>
     <string name="settings_copy_hint">Tap to copy</string>
+    <string name="version">Version 1.0.2 (Pre Release)</string>
 </resources>

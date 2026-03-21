@@ -14,7 +14,7 @@ class TransposerDialog(
 ) {
 
     private val notes = MusicTheory.ALL_NOTES
-    private var mode = "single" // "single" or "progression"
+    private var mode = "single"
     private var selectedChord = ""
     private var selectedFromRoot = "C"
     private var selectedToRoot = "G"
@@ -56,7 +56,6 @@ class TransposerDialog(
         modeRow.addView(btnProgression)
         layout.addView(modeRow)
 
-        // Content area — swaps between single and progression mode
         val contentArea = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -66,7 +65,6 @@ class TransposerDialog(
         }
         layout.addView(contentArea)
 
-        // Result text
         val tvResult = TextView(context).apply {
             textSize = 12f
             setTextColor(0xFFFFB3D9.toInt())
@@ -78,13 +76,11 @@ class TransposerDialog(
         }
         layout.addView(tvResult)
 
-        // Build single mode UI
         fun buildSingleMode() {
             contentArea.removeAllViews()
             mode = "single"
             updateModeButtons(btnSingle, btnProgression)
 
-            // Chord picker label
             contentArea.addView(TextView(context).apply {
                 text = context.getString(R.string.transposer_pick_chord)
                 textSize = 10f
@@ -97,7 +93,6 @@ class TransposerDialog(
                 ).also { it.bottomMargin = 8 }
             })
 
-            // Chord spinner
             val chords = chordData.keys.sorted().toMutableList()
             val spinner = Spinner(context).apply {
                 adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, chords).also {
@@ -119,11 +114,9 @@ class TransposerDialog(
             if (chords.isNotEmpty()) selectedChord = chords[0]
             contentArea.addView(spinner)
 
-            // From/To root row
             contentArea.addView(buildRootRow(tvResult))
         }
 
-        // Build progression mode UI
         fun buildProgressionMode() {
             contentArea.removeAllViews()
             mode = "progression"
@@ -143,7 +136,6 @@ class TransposerDialog(
                 return
             }
 
-            // Show current progression
             contentArea.addView(TextView(context).apply {
                 text = context.getString(R.string.transposer_current, currentProgression.joinToString(" → "))
                 textSize = 10f
@@ -154,7 +146,6 @@ class TransposerDialog(
                 ).also { it.bottomMargin = 16 }
             })
 
-            // Auto detect key
             val detected = MusicTheory.detectKey(currentProgression)
             if (detected != null) {
                 selectedFromRoot = detected.first
@@ -174,8 +165,6 @@ class TransposerDialog(
 
         btnSingle.setOnClickListener { buildSingleMode() }
         btnProgression.setOnClickListener { buildProgressionMode() }
-
-        // Start in single mode
         buildSingleMode()
 
         AlertDialog.Builder(context)
@@ -206,8 +195,6 @@ class TransposerDialog(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-
-        // From label
         row.addView(TextView(context).apply {
             text = context.getString(R.string.transposer_from)
             textSize = 10f
@@ -217,8 +204,6 @@ class TransposerDialog(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).also { it.marginEnd = 8 }
         })
-
-        // From spinner
         val fromSpinner = Spinner(context).apply {
             adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, notes).also {
                 it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -235,7 +220,6 @@ class TransposerDialog(
         }
         row.addView(fromSpinner)
 
-        // Arrow
         row.addView(TextView(context).apply {
             text = " → "
             textSize = 14f
@@ -246,7 +230,6 @@ class TransposerDialog(
             )
         })
 
-        // To spinner
         val toSpinner = Spinner(context).apply {
             adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, notes).also {
                 it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

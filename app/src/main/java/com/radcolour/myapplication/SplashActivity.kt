@@ -44,11 +44,6 @@ class SplashActivity : AppCompatActivity() {
 
         startAnimationSequence()
     }
-
-    // -------------------------------------------------------------------------
-    // Animation
-    // -------------------------------------------------------------------------
-
     private fun startAnimationSequence() {
         splashContent.scaleX = 0.8f
         splashContent.scaleY = 0.8f
@@ -72,19 +67,12 @@ class SplashActivity : AppCompatActivity() {
             }
             .start()
     }
-
-    // -------------------------------------------------------------------------
-    // Loading sequence
-    // -------------------------------------------------------------------------
-
     private fun startLoading() {
         Thread {
-            // Step 1 — Init chord repository
             runOnUiThread { tvStatus.setText(R.string.status_loading_chords) }
             ChordRepository.init(this)
             Thread.sleep(400)
 
-            // Step 2 — Check for already downloaded update
             val existingUpdate = ApkDownloader.findExistingUpdate(this)
             if (existingUpdate != null) {
                 val version = existingUpdate.name
@@ -94,13 +82,11 @@ class SplashActivity : AppCompatActivity() {
                 return@Thread
             }
 
-            // Step 3 — Check internet
             if (!UpdateManager.isInternetAvailable(this)) {
                 runOnUiThread { showNoInternetDialog() }
                 return@Thread
             }
 
-            // Step 4 — Check for updates
             runOnUiThread { tvStatus.setText(R.string.status_checking_updates) }
             val release = UpdateManager.checkForUpdate(this)
 
@@ -116,10 +102,6 @@ class SplashActivity : AppCompatActivity() {
             }
         }.start()
     }
-
-    // -------------------------------------------------------------------------
-    // Dialogs
-    // -------------------------------------------------------------------------
 
     private fun showNoInternetDialog() {
         AlertDialog.Builder(this)
@@ -179,11 +161,6 @@ class SplashActivity : AppCompatActivity() {
                 window?.setBackgroundDrawableResource(R.drawable.bg_card)
             }
     }
-
-    // -------------------------------------------------------------------------
-    // Download
-    // -------------------------------------------------------------------------
-
     private fun startDownload(apkUrl: String, version: String) {
         splashSpinner.visibility = View.GONE
         downloadProgress.visibility = View.VISIBLE
@@ -211,11 +188,6 @@ class SplashActivity : AppCompatActivity() {
             }
         )
     }
-
-    // -------------------------------------------------------------------------
-    // Transition to MainActivity
-    // -------------------------------------------------------------------------
-
     private fun finishLoading() {
         tvStatus.text = ""
         darkOverlay.animate()

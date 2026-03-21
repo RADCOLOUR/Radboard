@@ -35,7 +35,6 @@ class NotepadActivity : AppCompatActivity() {
         btnClear = findViewById(R.id.btnClear)
         etNotes = findViewById(R.id.etNotes)
 
-        // Restore saved notes
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         etNotes.setText(prefs.getString(KEY_NOTES, ""))
 
@@ -61,7 +60,7 @@ class NotepadActivity : AppCompatActivity() {
     private fun applyBold() {
         val start = etNotes.selectionStart
         val end = etNotes.selectionEnd
-        if (start == end) return // nothing selected
+        if (start == end) return
 
         val spannable = etNotes.text
         val existing = spannable.getSpans(start, end, StyleSpan::class.java)

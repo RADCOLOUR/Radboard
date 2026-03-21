@@ -11,7 +11,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class ProgressionActivity : AppCompatActivity() {
-
     private lateinit var btnBack: Button
     private lateinit var btnAddSection: Button
     private lateinit var sectionsContainer: LinearLayout
@@ -31,8 +30,6 @@ class ProgressionActivity : AppCompatActivity() {
     )
 
     private val sections = mutableListOf<Section>()
-
-    // Height for each fretboard diagram in the diagrams row
     private val diagramHeightDp = 160
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +61,7 @@ class ProgressionActivity : AppCompatActivity() {
     }
 
     private fun showTransposer() {
-        // Collect all unique chords across all sections
+
         val allChords = sections.flatMap { it.chords }.distinct()
 
         TransposerDialog(
@@ -72,11 +69,9 @@ class ProgressionActivity : AppCompatActivity() {
             chordData = ChordRepository.getAllChords(),
             currentProgression = allChords,
             onProgressionTransposed = { transposed ->
-                // Map old chord names to new ones
                 val oldChords = allChords
                 val chordMap = oldChords.zip(transposed).toMap()
 
-                // Apply transposition to all sections
                 sections.forEach { section ->
                     section.chords.replaceAll { chord ->
                         chordMap[chord] ?: chord
@@ -149,11 +144,6 @@ class ProgressionActivity : AppCompatActivity() {
             }
             .show()
     }
-
-    // -------------------------------------------------------------------------
-    // UI builder
-    // -------------------------------------------------------------------------
-
     private fun rebuildUI() {
         sectionsContainer.removeAllViews()
         sections.forEach { section ->
@@ -170,7 +160,6 @@ class ProgressionActivity : AppCompatActivity() {
             ).also { it.bottomMargin = 4 }
         }
 
-        // Section header row
         val headerRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.CENTER_VERTICAL
@@ -216,7 +205,6 @@ class ProgressionActivity : AppCompatActivity() {
         headerRow.addView(btnDeleteSection)
         container.addView(headerRow)
 
-        // Chord chips row (names)
         val chipsScroll = HorizontalScrollView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -237,7 +225,6 @@ class ProgressionActivity : AppCompatActivity() {
         chipsScroll.addView(chipsInner)
         container.addView(chipsScroll)
 
-        // Fretboard diagrams row
         val diagramsScroll = HorizontalScrollView(this).apply {
             val heightPx = (diagramHeightDp * resources.displayMetrics.density).toInt()
             layoutParams = LinearLayout.LayoutParams(
@@ -259,7 +246,6 @@ class ProgressionActivity : AppCompatActivity() {
         diagramsScroll.addView(diagramsInner)
         container.addView(diagramsScroll)
 
-        // Divider
         container.addView(View(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 1
@@ -267,10 +253,8 @@ class ProgressionActivity : AppCompatActivity() {
             setBackgroundColor(0xFF222222.toInt())
         })
 
-        // Populate chips and diagrams
         rebuildSectionContent(section, chipsInner, diagramsInner)
 
-        // Wire buttons
         btnAddChord.setOnClickListener {
             showAddChordDialog(section) {
                 rebuildSectionContent(section, chipsInner, diagramsInner)
@@ -302,7 +286,6 @@ class ProgressionActivity : AppCompatActivity() {
         diagramsInner.removeAllViews()
 
         if (section.chords.isEmpty()) {
-            // Empty state in chips row
             chipsInner.addView(TextView(this).apply {
                 text = "No chords yet — tap + Chord to add"
                 textSize = 10f
@@ -319,7 +302,6 @@ class ProgressionActivity : AppCompatActivity() {
 
         section.chords.forEachIndexed { index, chordName ->
 
-            // Chip
             val chip = Button(this).apply {
                 text = chordName
                 textSize = 10f
@@ -344,7 +326,6 @@ class ProgressionActivity : AppCompatActivity() {
             }
             chipsInner.addView(chip)
 
-            // Fretboard diagram
             val chordInfo = ChordRepository.getAllChords()[chordName]
             val diagramContainer = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
@@ -354,7 +335,6 @@ class ProgressionActivity : AppCompatActivity() {
                 ).also { it.marginEnd = 8 }
             }
 
-            // Chord name label above diagram
             val tvLabel = TextView(this).apply {
                 text = chordName
                 textSize = 9f
@@ -378,7 +358,6 @@ class ProgressionActivity : AppCompatActivity() {
                 }
                 diagramContainer.addView(fretboard)
             } else {
-                // Chord not found in library
                 val tvMissing = TextView(this).apply {
                     text = "?"
                     textSize = 20f
@@ -396,11 +375,6 @@ class ProgressionActivity : AppCompatActivity() {
             diagramsInner.addView(diagramContainer)
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Persistence
-    // -------------------------------------------------------------------------
-
     private fun saveSections() {
         val array = JSONArray()
         sections.forEach { section ->

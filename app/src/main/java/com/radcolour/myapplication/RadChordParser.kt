@@ -1,7 +1,6 @@
 package com.radcolour.myapplication
 
 object RadChordParser {
-
     data class ParsedPosition(
         val startFret: Int,
         val strings: List<Int>,
@@ -10,7 +9,6 @@ object RadChordParser {
         val barreFromString: Int = -1,
         val barreToString: Int = -1
     )
-
     data class ParsedChord(
         val name: String,
         val description: String,
@@ -19,7 +17,6 @@ object RadChordParser {
         val root: String = "",
         val type: String = ""
     )
-
     data class ParsedPack(
         val author: String,
         val description: String,
@@ -28,25 +25,17 @@ object RadChordParser {
         val chords: List<ParsedChord>,
         val errors: List<ParseError>
     )
-
     data class ParseError(
         val lineNumber: Int,
         val line: String,
         val reason: String
     )
-
-    // -------------------------------------------------------------------------
-    // Public entry points
-    // -------------------------------------------------------------------------
-
     fun parseRadGuitar(content: String): ParsedChord? {
         return parseInstrumentFile(content, isBass = false)
     }
-
     fun parseRadBass(content: String): ParsedChord? {
         return parseInstrumentFile(content, isBass = true)
     }
-
     fun parseRadPack(content: String): ParsedPack {
         var author = ""
         var packDescription = ""
@@ -65,21 +54,18 @@ object RadChordParser {
             when {
                 line.isEmpty() -> { i++; continue }
 
-                // Metadata
                 line.startsWith("author:", ignoreCase = true) ->
                     author = line.substringAfter(":").trim()
 
                 line.startsWith("description:", ignoreCase = true) ->
                     packDescription = line.substringAfter(":").trim()
 
-                // Whitelists
                 line.startsWith("roots:", ignoreCase = true) ->
                     roots = parseList(line.substringAfter(":"))
 
                 line.startsWith("types:", ignoreCase = true) ->
                     types = parseList(line.substringAfter(":"))
 
-                // Chord block — [Chord Name] Description | root:X type:Y
                 line.startsWith("[") -> {
                     val closeIdx = line.indexOf("]")
                     if (closeIdx < 0) {
@@ -95,7 +81,6 @@ object RadChordParser {
                         continue
                     }
 
-                    // Everything after ] on the same line
                     val rest = line.substring(closeIdx + 1).trim()
                     val metaParts = rest.split("|")
                     val chordDescription = metaParts[0].trim()
@@ -108,14 +93,13 @@ object RadChordParser {
                         type = extractInlineField(meta, "type") ?: ""
                     }
 
-                    // Collect guitar/bass lines until next chord block or end
                     val guitarPositions = mutableListOf<ParsedPosition>()
                     val bassPositions = mutableListOf<ParsedPosition>()
                     i++
 
                     while (i < lines.size) {
                         val inner = lines[i].trim()
-                        if (inner.startsWith("[")) break // next chord starts
+                        if (inner.startsWith("[")) break
                         if (inner.isEmpty()) { i++; continue }
 
                         val innerLine = i + 1
@@ -154,7 +138,7 @@ object RadChordParser {
                         chords.add(ParsedChord(name, chordDescription, guitarPositions, bassPositions, root, type))
                     }
 
-                    continue // i already advanced inside the while loop
+                    continue
                 }
 
                 else ->
@@ -166,11 +150,6 @@ object RadChordParser {
 
         return ParsedPack(author, packDescription, roots, types, chords, errors)
     }
-
-    // -------------------------------------------------------------------------
-    // Internal parsers
-    // -------------------------------------------------------------------------
-
     private fun parseInstrumentFile(content: String, isBass: Boolean): ParsedChord? {
         val lines = content.lines().map { it.trim() }.filter { it.isNotEmpty() }
         var name = ""
@@ -205,16 +184,8 @@ object RadChordParser {
             ParsedChord(name, description, positions, emptyList(), root, type)
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Position parser
-    // Format: TAB@STARTFRET barre:FROM-TO
-    // Example: 133211@3 barre:0-5
-    // -------------------------------------------------------------------------
-
     fun parsePosition(posStr: String, stringCount: Int): ParsedPosition? {
         return try {
-            // Split barre from tab
             val parts = posStr.trim().split(Regex("\\s+"))
             val tabPart = parts[0].trim()
             var barreFret = -1
@@ -291,23 +262,13 @@ object RadChordParser {
             null
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
-
     private fun parseList(raw: String): List<String> {
         return raw.split(",").map { it.trim() }.filter { it.isNotEmpty() }
     }
-
     private fun extractInlineField(meta: String, field: String): String? {
         val regex = Regex("$field:([^\\s]+)", RegexOption.IGNORE_CASE)
         return regex.find(meta)?.groupValues?.get(1)?.trim()
     }
-
-    // -------------------------------------------------------------------------
-    // Converters
-    // -------------------------------------------------------------------------
 
     fun toChordPosition(parsed: ParsedPosition): FretboardView.ChordPosition {
         return FretboardView.ChordPosition(

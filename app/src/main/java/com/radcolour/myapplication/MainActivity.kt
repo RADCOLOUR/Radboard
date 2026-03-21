@@ -1,5 +1,6 @@
 package com.radcolour.myapplication
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -37,8 +38,6 @@ class MainActivity : AppCompatActivity() {
     private var sessionRunning = false
     private var sessionSeconds = 0L
     private val tapTimes = mutableListOf<Long>()
-
-    // Swipe gesture tracking
     private var swipeStartX = 0f
     private var swipeStartY = 0f
     private val swipeThreshold = 100f
@@ -61,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -87,8 +87,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         handler.post(clockRunnable)
-
-        // Hamburger button
         btnMenu.setOnClickListener {
             if (drawerLayout.isDrawerOpen(sidebar)) {
                 drawerLayout.closeDrawer(sidebar)
@@ -96,8 +94,6 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(sidebar)
             }
         }
-
-        // Session timer
         btnSessionStart.setOnClickListener {
             if (sessionRunning) {
                 sessionRunning = false
@@ -116,7 +112,6 @@ class MainActivity : AppCompatActivity() {
             updateSessionDisplay()
         }
 
-        // BPM tap
         btnTap.setOnClickListener {
             val now = System.currentTimeMillis()
             tapTimes.add(now)
@@ -137,7 +132,6 @@ class MainActivity : AppCompatActivity() {
             tvBpm.text = getString(R.string.default_bpm)
         }
 
-        // Sidebar navigation
         btnChords.setOnClickListener {
             drawerLayout.closeDrawer(sidebar)
             startActivity(Intent(this, ChordsActivity::class.java))
@@ -153,7 +147,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, ProgressionActivity::class.java))
         }
 
-        // Swipe gesture to open sidebar
         drawerLayout.setOnTouchListener { _, event ->
             handleSwipe(event)
             false
@@ -169,7 +162,6 @@ class MainActivity : AppCompatActivity() {
             MotionEvent.ACTION_UP -> {
                 val deltaX = event.x - swipeStartX
                 val deltaY = event.y - swipeStartY
-                // Only open if swipe is mostly horizontal, starts near left edge
                 if (deltaX > swipeThreshold
                     && Math.abs(deltaY) < swipeThreshold
                     && swipeStartX < 80f) {
@@ -179,6 +171,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun updateSessionDisplay() {
         val hours = sessionSeconds / 3600
         val minutes = (sessionSeconds % 3600) / 60

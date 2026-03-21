@@ -5,7 +5,6 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <!-- Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -112,7 +111,6 @@
         android:layout_height="1dp"
         android:background="@color/outline"/>
 
-    <!-- Selector Row -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="38dp"
@@ -136,7 +134,6 @@
         android:layout_height="1dp"
         android:background="@color/outline"/>
 
-    <!-- Main Content Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -144,7 +141,6 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <!-- Left: Secondary selector list -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -172,7 +168,6 @@
 
         </LinearLayout>
 
-        <!-- Centre: Fretboard -->
         <com.radcolour.myapplication.FretboardView
             android:id="@+id/fretboardView"
             android:layout_width="0dp"
@@ -181,7 +176,6 @@
             android:background="@drawable/bg_card"
             android:layout_marginEnd="6dp"/>
 
-        <!-- Right: Chord info + controls -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -216,7 +210,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Instrument Toggle -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
