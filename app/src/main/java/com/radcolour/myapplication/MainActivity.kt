@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnChords: Button
     private lateinit var btnNotepad: Button
     private lateinit var btnProgressions: Button
+    private lateinit var btnSettings: Button
 
     private val handler = Handler(Looper.getMainLooper())
     private val clockFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -79,6 +80,11 @@ class MainActivity : AppCompatActivity() {
         btnChords = findViewById(R.id.btnChords)
         btnNotepad = findViewById(R.id.btnNotepad)
         btnProgressions = findViewById(R.id.btnProgressions)
+        btnSettings = findViewById(R.id.btnSettings)
+        btnSettings.setOnClickListener {
+            drawerLayout.closeDrawer(sidebar)
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
 
         handler.post(clockRunnable)
 

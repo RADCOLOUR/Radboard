@@ -1,0 +1,103 @@
+package com.radcolour.myapplication
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.Switch
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+
+class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var btnBack: Button
+    private lateinit var switchPreRelease: Switch
+    private lateinit var btnClearChords: Button
+    private lateinit var tvVersion: TextView
+    private lateinit var cardVersion: View
+
+    companion object {
+        const val PREFS_NAME = "radboard_settings"
+        const val KEY_PRERELEASE = "enable_prerelease"
+
+        fun isPreReleaseEnabled(context: Context): Boolean {
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getBoolean(KEY_PRERELEASE, false)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        hideSystemUI()
+        setContentView(R.layout.activity_settings)
+
+        ChordRepository.init(this)
+
+        btnBack = findViewById(R.id.btnBack)
+        switchPreRelease = findViewById(R.id.switchPreRelease)
+        btnClearChords = findViewById(R.id.btnClearChords)
+        tvVersion = findViewById(R.id.tvVersion)
+        cardVersion = findViewById(R.id.cardVersion)
+
+        // Set version text
+        tvVersion.text = getString(R.string.settings_version_value, BuildConfig.VERSION_NAME)
+
+        // Load saved settings
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        switchPreRelease.isChecked = prefs.getBoolean(KEY_PRERELEASE, false)
+
+        // Pre-release toggle
+        switchPreRelease.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_PRERELEASE, isChecked).apply()
+        }
+
+        // Clear imported chords
+        btnClearChords.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.settings_clear_chords_confirm_title)
+                .setMessage(R.string.settings_clear_chords_confirm_message)
+                .setPositiveButton(R.string.btn_clear) { _, _ ->
+                    ChordRepository.clearImported(this)
+                    Toast.makeText(this, getString(R.string.settings_chords_cleared), Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+                .apply {
+                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(0xFFFF5449.toInt())
+                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(0xFF8A8A8A.toInt())
+                    window?.setBackgroundDrawableResource(R.drawable.bg_card)
+                }
+        }
+
+        // Version — tap to copy
+        cardVersion.setOnClickListener {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("version", BuildConfig.VERSION_NAME)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, getString(R.string.settings_version_copied), Toast.LENGTH_SHORT).show()
+        }
+
+        btnBack.setOnClickListener { finish() }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemUI()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                )
+    }
+}

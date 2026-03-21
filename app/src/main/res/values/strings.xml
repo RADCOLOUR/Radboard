@@ -60,4 +60,19 @@
     <string name="tools_key_finder">Key &amp; Scale Finder</string>
     <string name="tools_transposer">Chord Transposer</string>
     <string name="transposer_applied">Progression transposed successfully</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_updates">Updates</string>
+    <string name="settings_section_data">Data</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_prerelease_title">Pre-release updates</string>
+    <string name="settings_prerelease_desc">Receive early access builds before stable release</string>
+    <string name="settings_clear_chords_title">Clear imported chords</string>
+    <string name="settings_clear_chords_desc">Remove all chords imported from .radguitar and .radpack files</string>
+    <string name="settings_clear_chords_confirm_title">Clear imported chords?</string>
+    <string name="settings_clear_chords_confirm_message">This will remove all imported chords. Built-in chords will not be affected.</string>
+    <string name="settings_chords_cleared">Imported chords cleared</string>
+    <string name="settings_version_title">Version</string>
+    <string name="settings_version_value">%1$s</string>
+    <string name="settings_version_copied">Version copied to clipboard</string>
+    <string name="settings_copy_hint">Tap to copy</string>
 </resources>

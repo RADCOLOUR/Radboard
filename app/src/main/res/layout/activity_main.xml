@@ -283,6 +283,27 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/outline"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/settings_title"
+            android:textColor="@color/on_surface_variant"
+            android:backgroundTint="@color/surface"
+            android:textSize="12sp"
+            android:gravity="start|center_vertical"
+            android:paddingStart="20dp"
+            android:letterSpacing="0.01"
+            android:stateListAnimator="@null"
+            android:background="@drawable/bg_button"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -38,9 +38,18 @@ object UpdateManager {
     // Returns ReleaseInfo or null if check failed
     // -------------------------------------------------------------------------
 
-    fun checkForUpdate(): ReleaseInfo? {
+    fun checkForUpdate(context: Context): ReleaseInfo? {
         return try {
-            val url = URL(GITHUB_API_URL)
+            val usePreRelease = SettingsActivity.isPreReleaseEnabled(context)
+
+            // If pre-releases enabled, fetch all releases and find the newest
+            // Otherwise use /releases/latest which only returns stable
+            val apiUrl = if (usePreRelease)
+                "https://api.github.com/repos/RADCOLOUR/Radboard/releases"
+            else
+                "https://api.github.com/repos/RADCOLOUR/Radboard/releases/latest"
+
+            val url = URL(apiUrl)
             val connection = url.openConnection() as HttpURLConnection
             connection.apply {
                 requestMethod = "GET"
@@ -52,40 +61,49 @@ object UpdateManager {
             if (connection.responseCode != HttpURLConnection.HTTP_OK) return null
 
             val response = connection.inputStream.bufferedReader().use { it.readText() }
-            val json = JSONObject(response)
 
-            val tagName = json.getString("tag_name").trimStart('v')
-            val releaseNotes = json.optString("body", "No release notes available.")
-
-            // Find the APK asset URL
-            val assets = json.optJSONArray("assets")
-            var apkUrl = ""
-            if (assets != null) {
-                for (i in 0 until assets.length()) {
-                    val asset = assets.getJSONObject(i)
-                    val name = asset.getString("name")
-                    if (name.endsWith(".apk", ignoreCase = true)) {
-                        apkUrl = asset.getString("browser_download_url")
-                        break
-                    }
-                }
+            // Parse depending on endpoint used
+            val (tagName, releaseNotes, apkUrl) = if (usePreRelease) {
+                // Returns array — find newest by tag
+                val array = org.json.JSONArray(response)
+                if (array.length() == 0) return null
+                // Array is sorted newest first
+                val latest = array.getJSONObject(0)
+                Triple(
+                    latest.getString("tag_name").trimStart('v'),
+                    latest.optString("body", "No release notes available."),
+                    findApkUrl(latest)
+                )
+            } else {
+                val json = org.json.JSONObject(response)
+                Triple(
+                    json.getString("tag_name").trimStart('v'),
+                    json.optString("body", "No release notes available."),
+                    findApkUrl(json)
+                )
             }
-
-
-
-            // If no APK asset found, fall back to releases page
-            if (apkUrl.isEmpty()) apkUrl = GITHUB_RELEASES_URL
 
             ReleaseInfo(
                 tagName = tagName,
                 releaseNotes = releaseNotes,
-                apkUrl = apkUrl,
-                isNewer = isVersionNewer(tagName, CURRENT_VERSION)
+                apkUrl = apkUrl.ifEmpty { GITHUB_RELEASES_URL },
+                isNewer = isVersionNewer(tagName, BuildConfig.VERSION_NAME)
             )
 
         } catch (e: Exception) {
             null
         }
+    }
+
+    private fun findApkUrl(json: org.json.JSONObject): String {
+        val assets = json.optJSONArray("assets") ?: return ""
+        for (i in 0 until assets.length()) {
+            val asset = assets.getJSONObject(i)
+            if (asset.getString("name").endsWith(".apk", ignoreCase = true)) {
+                return asset.getString("browser_download_url")
+            }
+        }
+        return ""
     }
 
     // -------------------------------------------------------------------------

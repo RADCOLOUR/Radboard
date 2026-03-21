@@ -102,7 +102,7 @@ class SplashActivity : AppCompatActivity() {
 
             // Step 4 — Check for updates
             runOnUiThread { tvStatus.setText(R.string.status_checking_updates) }
-            val release = UpdateManager.checkForUpdate()
+            val release = UpdateManager.checkForUpdate(this)
 
             runOnUiThread {
                 when {

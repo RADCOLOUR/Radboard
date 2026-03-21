@@ -91,6 +91,11 @@
             android:exported="false"
             android:screenOrientation="landscape"/>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"/>
+
         <!-- FileProvider for APK install -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -109,6 +114,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
+
 
 
 

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:gravity="center_vertical"
+        android:background="@color/background">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/tertiary_container"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/btn_back"
+            android:textColor="@color/tertiary"
+            android:textSize="9sp"
+            android:stateListAnimator="@null"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/settings_title"
+            android:textColor="@color/on_background"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02"
+            android:gravity="center"/>
+
+        <!-- Spacer to balance back button -->
+        <View
+            android:layout_width="60dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/outline"/>
+
+    <!-- Settings content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Updates section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_updates"
+                android:textColor="@color/tertiary"
+                android:textSize="10sp"
+                android:letterSpacing="0.15"
+                android:textAllCaps="true"
+                android:paddingStart="4dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Pre-release toggle card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_card"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="4dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_prerelease_title"
+                        android:textColor="@color/on_background"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_prerelease_desc"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="9sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switchPreRelease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumbTint="@color/tertiary"
+                    android:trackTint="@color/tertiary_container"/>
+
+            </LinearLayout>
+
+            <!-- Data section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_data"
+                android:textColor="@color/tertiary"
+                android:textSize="10sp"
+                android:letterSpacing="0.15"
+                android:textAllCaps="true"
+                android:paddingStart="4dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Clear imported chords card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_card"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="4dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_clear_chords_title"
+                        android:textColor="@color/on_background"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_clear_chords_desc"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="9sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnClearChords"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_button"
+                    android:backgroundTint="@color/error_container"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/btn_clear"
+                    android:textColor="@color/error"
+                    android:textSize="9sp"
+                    android:stateListAnimator="@null"/>
+
+            </LinearLayout>
+
+            <!-- About section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_about"
+                android:textColor="@color/tertiary"
+                android:textSize="10sp"
+                android:letterSpacing="0.15"
+                android:textAllCaps="true"
+                android:paddingStart="4dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Version card -->
+            <LinearLayout
+                android:id="@+id/cardVersion"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_card"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_version_title"
+                        android:textColor="@color/on_background"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tvVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="9sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_copy_hint"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="9sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
