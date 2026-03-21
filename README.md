@@ -1,4 +1,4 @@
-# RADBOARD
+![Logo](ascii-art-text.png)
 
 Radboard is an app that is built for musicians and producers for working in the studio.
 The app is in early stages, as I am just trying to figure things out.
