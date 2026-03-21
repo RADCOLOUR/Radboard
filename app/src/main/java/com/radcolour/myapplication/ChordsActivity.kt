@@ -156,21 +156,17 @@ class ChordsActivity : AppCompatActivity() {
     }
 
     private fun showToolsMenu() {
-        val options = arrayOf(
-            getString(R.string.tools_key_finder),
-            getString(R.string.tools_transposer)
-        )
-        AlertDialog.Builder(this)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showKeyFinder()
-                    1 -> showTransposer()
-                }
+        KeyFinderDialog(
+            context = this,
+            onChordsHighlighted = { chords ->
+                highlightedChords = chords
+                buildPrimarySelector()
+            },
+            onDismiss = {
+                highlightedChords = emptySet()
+                buildPrimarySelector()
             }
-            .show()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.bg_card)
-            }
+        ).show()
     }
 
     private fun showKeyFinder() {
@@ -187,40 +183,7 @@ class ChordsActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showTransposer() {
-        // Collect all chords from current progression
-        val prefs = getSharedPreferences("progression_prefs", MODE_PRIVATE)
-        val json = prefs.getString("sections", null)
-        val progressionChords = mutableListOf<String>()
-        if (json != null) {
-            try {
-                val array = org.json.JSONArray(json)
-                for (i in 0 until array.length()) {
-                    val obj = array.getJSONObject(i)
-                    val chordsArray = obj.getJSONArray("chords")
-                    for (j in 0 until chordsArray.length()) {
-                        val chord = chordsArray.getString(j)
-                        if (!progressionChords.contains(chord)) progressionChords.add(chord)
-                    }
-                }
-            } catch (e: Exception) {
-                // ignore
-            }
-        }
 
-        TransposerDialog(
-            context = this,
-            chordData = chordData,
-            currentProgression = progressionChords,
-            onProgressionTransposed = { transposed ->
-                Toast.makeText(
-                    this,
-                    getString(R.string.transposer_result_progression, transposed.joinToString(" → ")),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        ).show()
-    }
 
     // -------------------------------------------------------------------------
     // .radpack import — confirmation popup + per-chord conflict dialogs

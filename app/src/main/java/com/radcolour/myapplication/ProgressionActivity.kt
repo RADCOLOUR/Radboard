@@ -17,6 +17,7 @@ class ProgressionActivity : AppCompatActivity() {
     private lateinit var sectionsContainer: LinearLayout
     private lateinit var tvSongTitle: TextView
 
+    private lateinit var btnTranspose: Button
     private val PREFS_NAME = "progression_prefs"
     private val KEY_SECTIONS = "sections"
 
@@ -44,6 +45,8 @@ class ProgressionActivity : AppCompatActivity() {
 
         btnBack = findViewById(R.id.btnBack)
         btnAddSection = findViewById(R.id.btnAddSection)
+        btnTranspose = findViewById(R.id.btnTranspose)
+        btnTranspose.setOnClickListener { showTransposer() }
         sectionsContainer = findViewById(R.id.sectionsContainer)
         tvSongTitle = findViewById(R.id.tvSongTitle)
 
@@ -60,10 +63,37 @@ class ProgressionActivity : AppCompatActivity() {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Section dialogs
-    // -------------------------------------------------------------------------
+    private fun showTransposer() {
+        // Collect all unique chords across all sections
+        val allChords = sections.flatMap { it.chords }.distinct()
 
+        TransposerDialog(
+            context = this,
+            chordData = ChordRepository.getAllChords(),
+            currentProgression = allChords,
+            onProgressionTransposed = { transposed ->
+                // Map old chord names to new ones
+                val oldChords = allChords
+                val chordMap = oldChords.zip(transposed).toMap()
+
+                // Apply transposition to all sections
+                sections.forEach { section ->
+                    section.chords.replaceAll { chord ->
+                        chordMap[chord] ?: chord
+                    }
+                }
+
+                saveSections()
+                rebuildUI()
+
+                Toast.makeText(
+                    this,
+                    getString(R.string.transposer_applied),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        ).show()
+    }
     private fun showAddSectionDialog() {
         val options = (defaultSectionTypes + listOf("Custom...")).toTypedArray()
         AlertDialog.Builder(this)

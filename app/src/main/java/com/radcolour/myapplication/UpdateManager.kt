@@ -11,7 +11,7 @@ object UpdateManager {
 
     const val GITHUB_API_URL = "https://api.github.com/repos/RADCOLOUR/Radboard/releases/latest"
     const val GITHUB_RELEASES_URL = "https://github.com/RADCOLOUR/Radboard/releases/latest"
-    const val CURRENT_VERSION = "1.0.1"
+    const val CURRENT_VERSION = "1.0.2"
 
     data class ReleaseInfo(
         val tagName: String,

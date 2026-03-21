@@ -34,7 +34,7 @@ object ApkDownloader {
                         && file.length() > 0
             }
             ?.filter { file ->
-                // Extract version from filename e.g. radboard-1.0.1.apk -> 1.0.1
+               
                 val version = file.name
                     .removePrefix("radboard-")
                     .removeSuffix(".apk")

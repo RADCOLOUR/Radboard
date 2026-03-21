@@ -41,6 +41,20 @@
             android:gravity="center"/>
 
         <Button
+            android:id="@+id/btnTranspose"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/secondary_container"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Transpose"
+            android:textColor="@color/secondary"
+            android:textSize="9sp"
+            android:stateListAnimator="@null"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
             android:id="@+id/btnAddSection"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
