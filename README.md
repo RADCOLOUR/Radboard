@@ -14,4 +14,4 @@ If you want to try running this on any other android device, make sure its runni
 This app requires an Internet Connection for updating, if you do not have internet enabled then you will have to 
 download updates via .apk from here, which is kind of a hassle.
 
-I'm always taking new suggestions. If you want a feature, I will get working on it (unless its unrealistic of course).
+Visit [The Wiki](https://github.com/RADCOLOUR/Radboard/wiki) for more information on this project, including how to install and the Quick Start guide.
