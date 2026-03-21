@@ -5,12 +5,11 @@
 
     <!-- Gradient background -->
     <View
-        android:id="@+id/splashBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_splash_gradient"/>
 
-    <!-- Dark overlay that fades in to transition to dark theme -->
+    <!-- Dark overlay -->
     <View
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
@@ -28,23 +27,16 @@
         android:gravity="center"
         android:alpha="0">
 
-        <!-- Geometric logo view -->
-        <com.radcolour.myapplication.LogoView
-            android:id="@+id/logoView"
-            android:layout_width="160dp"
-            android:layout_height="160dp"/>
-
-        <!-- App name -->
+        <!-- App name as logo -->
         <TextView
             android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/branding"
+            android:text="Radboard"
             android:textColor="#FFFFFF"
-            android:textSize="32sp"
+            android:textSize="56sp"
             android:textStyle="bold"
-            android:letterSpacing="0.08"
-            android:layout_marginTop="16dp"
+            android:letterSpacing="0.05"
             android:fontFamily="@font/inter"/>
 
         <!-- Tagline -->
@@ -53,21 +45,68 @@
             android:layout_height="wrap_content"
             android:text="Your music. Your tools."
             android:textColor="#CCFFFFFF"
-            android:textSize="12sp"
-            android:letterSpacing="0.1"
-            android:layout_marginTop="4dp"
+            android:textSize="13sp"
+            android:letterSpacing="0.08"
+            android:layout_marginTop="6dp"
             android:fontFamily="@font/inter"/>
 
     </LinearLayout>
 
-    <!-- Spinner — shown after content appears -->
-    <ProgressBar
-        android:id="@+id/splashSpinner"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+    <!-- Bottom status area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:gravity="center"
         android:layout_marginBottom="40dp"
-        android:alpha="0"
-        android:indeterminateTint="#FFFFFF"/>
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp">
+
+        <!-- Status text -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#CCFFFFFF"
+            android:textSize="11sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/inter"/>
+
+        <!-- Spinner -->
+        <ProgressBar
+            android:id="@+id/splashSpinner"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:alpha="0"
+            android:indeterminateTint="#FFFFFF"/>
+
+        <!-- Download progress bar -->
+        <ProgressBar
+            android:id="@+id/downloadProgress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:progressTint="#FFFFFF"
+            android:progressBackgroundTint="#44FFFFFF"
+            android:max="100"
+            android:progress="0"
+            android:visibility="gone"/>
+
+        <!-- Download percentage -->
+        <TextView
+            android:id="@+id/tvDownloadPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textColor="#CCFFFFFF"
+            android:textSize="11sp"
+            android:layout_marginTop="6dp"
+            android:visibility="gone"
+            android:fontFamily="@font/inter"/>
+
+    </LinearLayout>
 
 </FrameLayout>

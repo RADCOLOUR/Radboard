@@ -1,13 +1,12 @@
 package com.radcolour.myapplication
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ProgressBar
@@ -19,7 +18,10 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var splashContent: View
     private lateinit var darkOverlay: View
     private lateinit var splashSpinner: ProgressBar
-    private lateinit var logoView: LogoView
+    private lateinit var tvStatus: TextView
+    private lateinit var tvAppName: TextView
+    private lateinit var downloadProgress: ProgressBar
+    private lateinit var tvDownloadPercent: TextView
 
     private val handler = Handler(Looper.getMainLooper())
     private var loadingComplete = false
@@ -34,40 +36,37 @@ class SplashActivity : AppCompatActivity() {
         splashContent = findViewById(R.id.splashContent)
         darkOverlay = findViewById(R.id.darkOverlay)
         splashSpinner = findViewById(R.id.splashSpinner)
-        logoView = findViewById(R.id.logoView)
+        tvStatus = findViewById(R.id.tvStatus)
+        tvAppName = findViewById(R.id.tvAppName)
+        downloadProgress = findViewById(R.id.downloadProgress)
+        tvDownloadPercent = findViewById(R.id.tvDownloadPercent)
 
-        // Start loading in background
-        startLoading()
-
-        // Start animation sequence
         startAnimationSequence()
     }
 
     // -------------------------------------------------------------------------
-    // Animation sequence
+    // Animation
     // -------------------------------------------------------------------------
 
     private fun startAnimationSequence() {
-        // Step 1: Logo + content fades and scales in
-        splashContent.scaleX = 0.6f
-        splashContent.scaleY = 0.6f
+        splashContent.scaleX = 0.8f
+        splashContent.scaleY = 0.8f
 
         splashContent.animate()
             .alpha(1f)
             .scaleX(1f)
             .scaleY(1f)
-            .setDuration(600)
-            .setStartDelay(200)
-            .setInterpolator(OvershootInterpolator(1.2f))
+            .setDuration(500)
+            .setStartDelay(150)
+            .setInterpolator(OvershootInterpolator(1.1f))
             .withEndAction {
-                // Step 2: Spinner fades in after logo appears
                 splashSpinner.animate()
                     .alpha(1f)
-                    .setDuration(300)
+                    .setDuration(250)
                     .setInterpolator(DecelerateInterpolator())
                     .withEndAction {
                         animationComplete = true
-                        checkIfReadyToTransition()
+                        startLoading()
                     }
                     .start()
             }
@@ -75,51 +74,150 @@ class SplashActivity : AppCompatActivity() {
     }
 
     // -------------------------------------------------------------------------
-    // Loading — initialise repository and anything else needed
+    // Loading sequence
     // -------------------------------------------------------------------------
 
     private fun startLoading() {
-        // Run on background thread
         Thread {
-            // Init chord repository — loads builtin_chords.radpack
+            // Step 1 — Init chord repository
+            runOnUiThread { tvStatus.text = "Loading chords..." }
             ChordRepository.init(this)
+            Thread.sleep(400)
 
-            // Small minimum display time so splash doesn't flash too quickly
-            Thread.sleep(1200)
+            // Step 2 — Check internet
+            if (!UpdateManager.isInternetAvailable(this)) {
+                runOnUiThread { showNoInternetDialog() }
+                return@Thread
+            }
+
+            // Step 3 — Check for updates
+            runOnUiThread { tvStatus.text = "Checking for updates..." }
+            val release = UpdateManager.checkForUpdate()
 
             runOnUiThread {
-                loadingComplete = true
-                checkIfReadyToTransition()
+                when {
+                    release == null -> {
+                        // Could not reach GitHub — proceed anyway
+                        tvStatus.text = "Could not check for updates"
+                        Thread.sleep(600)
+                        finishLoading()
+                    }
+                    release.isNewer -> showUpdateDialog(release)
+                    else -> finishLoading()
+                }
             }
         }.start()
     }
 
     // -------------------------------------------------------------------------
-    // Transition — only proceed when both animation and loading are done
+    // Dialogs
     // -------------------------------------------------------------------------
 
-    private fun checkIfReadyToTransition() {
-        if (loadingComplete && animationComplete) {
-            beginTransition()
-        }
+    private fun showNoInternetDialog() {
+        val dialogView = layoutInflater.inflate(
+            android.R.layout.select_dialog_singlechoice, null
+        )
+
+        AlertDialog.Builder(this)
+            .setTitle("No Internet Connection")
+            .setMessage(
+                "Radboard could not connect to the internet.\n\n" +
+                        "Update checking and font loading require an internet connection. " +
+                        "The app will still work without it."
+            )
+            .setPositiveButton("Retry") { _, _ ->
+                tvStatus.text = "Retrying..."
+                startLoading()
+            }
+            .setNegativeButton("Continue Anyway") { _, _ ->
+                finishLoading()
+            }
+            .setCancelable(false)
+            .show()
+            .apply {
+                // Style to match app
+                getButton(AlertDialog.BUTTON_POSITIVE)
+                    ?.setTextColor(0xFF7DD6FF.toInt())
+                getButton(AlertDialog.BUTTON_NEGATIVE)
+                    ?.setTextColor(0xFF8A8A8A.toInt())
+                window?.setBackgroundDrawableResource(R.drawable.bg_card)
+            }
     }
 
-    private fun beginTransition() {
-        // Step 1: Fade overlay to black (bold colour → dark)
+    private fun showUpdateDialog(release: UpdateManager.ReleaseInfo) {
+        AlertDialog.Builder(this)
+            .setTitle("Update Available — v${release.tagName}")
+            .setMessage(
+                "A new version of Radboard is available.\n\n${release.releaseNotes}"
+            )
+            .setPositiveButton("Update Now") { _, _ ->
+                startDownload(release.apkUrl)
+            }
+            .setNegativeButton("Skip") { _, _ ->
+                finishLoading()
+            }
+            .setCancelable(false)
+            .show()
+            .apply {
+                getButton(AlertDialog.BUTTON_POSITIVE)
+                    ?.setTextColor(0xFFBFFFAA.toInt())
+                getButton(AlertDialog.BUTTON_NEGATIVE)
+                    ?.setTextColor(0xFF8A8A8A.toInt())
+                window?.setBackgroundDrawableResource(R.drawable.bg_card)
+            }
+    }
+
+    // -------------------------------------------------------------------------
+    // Download
+    // -------------------------------------------------------------------------
+
+    private fun startDownload(apkUrl: String) {
+        // Show download UI
+        splashSpinner.visibility = View.GONE
+        downloadProgress.visibility = View.VISIBLE
+        tvDownloadPercent.visibility = View.VISIBLE
+        tvStatus.text = "Downloading update..."
+
+        ApkDownloader.download(
+            context = this,
+            apkUrl = apkUrl,
+            onProgress = { percent ->
+                downloadProgress.progress = percent
+                tvDownloadPercent.text = "$percent%"
+            },
+            onComplete = {
+                tvStatus.text = "Installing..."
+                tvDownloadPercent.text = "100%"
+                // Install is triggered automatically inside ApkDownloader
+            },
+            onError = {
+                tvStatus.text = "Download failed"
+                downloadProgress.visibility = View.GONE
+                tvDownloadPercent.visibility = View.GONE
+                splashSpinner.visibility = View.VISIBLE
+                // Wait a moment then continue to app
+                handler.postDelayed({ finishLoading() }, 1500)
+            }
+        )
+    }
+
+    // -------------------------------------------------------------------------
+    // Transition to MainActivity
+    // -------------------------------------------------------------------------
+
+    private fun finishLoading() {
+        loadingComplete = true
+        tvStatus.text = ""
         darkOverlay.animate()
             .alpha(1f)
             .setDuration(400)
-            .setInterpolator(AccelerateInterpolator())
+            .setInterpolator(DecelerateInterpolator())
             .withEndAction {
-                // Step 2: Launch MainActivity
                 startActivity(Intent(this, MainActivity::class.java))
-
-                // Step 3: Slide up transition
                 overridePendingTransition(
-                    android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right
+                    R.anim.slide_in_up,
+                    R.anim.slide_out_up
                 )
-
                 finish()
             }
             .start()
