@@ -84,12 +84,12 @@ class NotepadActivity : AppCompatActivity() {
 
     private fun loadNotes() {
         val project = ProjectManager.getActiveProject(this)
-        etNotes.setText(ProjectManager.readNotepad(project))
+        etNotes.setText(ProjectManager.readNotepad(this, project))
     }
 
     private fun saveNotes() {
         val project = ProjectManager.getActiveProject(this)
-        ProjectManager.writeNotepad(project, etNotes.text.toString())
+        ProjectManager.writeNotepad(this, project, etNotes.text.toString())
     }
 
     private fun applyBold() {

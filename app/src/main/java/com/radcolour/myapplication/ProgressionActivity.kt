@@ -29,6 +29,7 @@ class ProgressionActivity : AppCompatActivity() {
 
     private val sections = mutableListOf<Section>()
     private val diagramHeightDp = 160
+    private var expandedSectionIndex = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +98,7 @@ class ProgressionActivity : AppCompatActivity() {
 
     private fun addSection(name: String) {
         sections.add(Section(name))
+        expandedSectionIndex = sections.size - 1
         saveSections()
         rebuildUI()
     }
@@ -137,12 +139,14 @@ class ProgressionActivity : AppCompatActivity() {
             return
         }
 
-        sections.forEach { section ->
-            sectionsContainer.addView(buildSectionView(section))
+        sections.forEachIndexed { index, section ->
+            sectionsContainer.addView(buildSectionView(section, index))
         }
     }
 
-    private fun buildSectionView(section: Section): LinearLayout {
+    private fun buildSectionView(section: Section, sectionIndex: Int): LinearLayout {
+        val isExpanded = sectionIndex == expandedSectionIndex
+
         val container = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -171,6 +175,26 @@ class ProgressionActivity : AppCompatActivity() {
             gravity = android.view.Gravity.CENTER_VERTICAL
         }
 
+        val tvChordCount = TextView(this).apply {
+            text = "${section.chords.size} chord${if (section.chords.size != 1) "s" else ""}"
+            textSize = 9f
+            setTextColor(0xFF8A8A8A.toInt())
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.marginEnd = 8 }
+        }
+
+        val tvExpand = TextView(this).apply {
+            text = if (isExpanded) "▲" else "▼"
+            textSize = 10f
+            setTextColor(0xFF8A8A8A.toInt())
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.marginEnd = 8 }
+        }
+
         val btnAddChord = Button(this).apply {
             text = "+ Chord"
             textSize = 9f
@@ -192,10 +216,72 @@ class ProgressionActivity : AppCompatActivity() {
         }
 
         headerRow.addView(tvName)
+        headerRow.addView(tvChordCount)
+        headerRow.addView(tvExpand)
         headerRow.addView(btnAddChord)
         headerRow.addView(btnDeleteSection)
         container.addView(headerRow)
 
+        // Expandable content — only built when expanded
+        val contentContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            visibility = if (isExpanded) View.VISIBLE else View.GONE
+        }
+
+        if (isExpanded) {
+            buildExpandedContent(section, contentContainer)
+        }
+
+        container.addView(contentContainer)
+
+        container.addView(View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 1
+            )
+            setBackgroundColor(0xFF2B2B2B.toInt())
+        })
+
+        // Tap header to expand/collapse
+        headerRow.setOnClickListener {
+            if (expandedSectionIndex == sectionIndex) {
+                expandedSectionIndex = -1
+            } else {
+                expandedSectionIndex = sectionIndex
+            }
+            rebuildUI()
+        }
+
+        btnAddChord.setOnClickListener {
+            expandedSectionIndex = sectionIndex
+            showAddChordDialog(section) {
+                rebuildUI()
+            }
+        }
+
+        btnDeleteSection.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Delete Section")
+                .setMessage("Delete \"${section.name}\"?")
+                .setPositiveButton("Delete") { _, _ ->
+                    sections.remove(section)
+                    if (expandedSectionIndex >= sections.size) {
+                        expandedSectionIndex = sections.size - 1
+                    }
+                    saveSections()
+                    rebuildUI()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        return container
+    }
+
+    private fun buildExpandedContent(section: Section, container: LinearLayout) {
         val chipsScroll = HorizontalScrollView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -237,38 +323,10 @@ class ProgressionActivity : AppCompatActivity() {
         diagramsScroll.addView(diagramsInner)
         container.addView(diagramsScroll)
 
-        container.addView(View(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1
-            )
-            setBackgroundColor(0xFF2B2B2B.toInt())
-        })
-
-        rebuildSectionContent(section, chipsInner, diagramsInner)
-
-        btnAddChord.setOnClickListener {
-            showAddChordDialog(section) {
-                rebuildSectionContent(section, chipsInner, diagramsInner)
-            }
-        }
-
-        btnDeleteSection.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("Delete Section")
-                .setMessage("Delete \"${section.name}\"?")
-                .setPositiveButton("Delete") { _, _ ->
-                    sections.remove(section)
-                    saveSections()
-                    rebuildUI()
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
-        }
-
-        return container
+        buildSectionContent(section, chipsInner, diagramsInner)
     }
 
-    private fun rebuildSectionContent(
+    private fun buildSectionContent(
         section: Section,
         chipsInner: LinearLayout,
         diagramsInner: LinearLayout
@@ -311,7 +369,7 @@ class ProgressionActivity : AppCompatActivity() {
                     .setPositiveButton("Remove") { _, _ ->
                         section.chords.removeAt(index)
                         saveSections()
-                        rebuildSectionContent(section, chipsInner, diagramsInner)
+                        rebuildUI()
                     }
                     .setNegativeButton("Cancel", null)
                     .show()
@@ -381,13 +439,13 @@ class ProgressionActivity : AppCompatActivity() {
             array.put(obj)
         }
         val project = ProjectManager.getActiveProject(this)
-        ProjectManager.writeProgression(project, array.toString())
+        ProjectManager.writeProgression(this, project, array.toString())
     }
 
     private fun loadSections() {
         sections.clear()
         val project = ProjectManager.getActiveProject(this)
-        val json = ProjectManager.readProgression(project)
+        val json = ProjectManager.readProgression(this, project)
         try {
             val array = JSONArray(json)
             for (i in 0 until array.length()) {

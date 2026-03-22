@@ -48,7 +48,7 @@ class ProjectPickerActivity : AppCompatActivity() {
         val active = ProjectManager.getActiveProject(this)
         tvActiveProject.text = getString(R.string.active_project_label, active)
 
-        ProjectManager.getAllProjects().forEach { project ->
+        ProjectManager.getAllProjects(this).forEach { project ->
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = android.view.Gravity.CENTER_VERTICAL
@@ -158,7 +158,7 @@ class ProjectPickerActivity : AppCompatActivity() {
             }
 
             btnDelete.setOnClickListener {
-                if (ProjectManager.getAllProjects().size <= 1) {
+                if (ProjectManager.getAllProjects(this).size <= 1) {
                     Toast.makeText(this, getString(R.string.cannot_delete_last), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -187,7 +187,7 @@ class ProjectPickerActivity : AppCompatActivity() {
             projectList.addView(row)
         }
 
-        if (ProjectManager.getAllProjects().size == 1) {
+        if (ProjectManager.getAllProjects(this).size == 1) {
             projectList.addView(TextView(this).apply {
                 text = getString(R.string.empty_projects_hint)
                 textSize = 10f
@@ -218,10 +218,10 @@ class ProjectPickerActivity : AppCompatActivity() {
                 when {
                     name.isEmpty() ->
                         Toast.makeText(this, getString(R.string.project_name_empty), Toast.LENGTH_SHORT).show()
-                    ProjectManager.getAllProjects().contains(name) ->
+                    ProjectManager.getAllProjects(this).contains(name) ->
                         Toast.makeText(this, getString(R.string.project_name_exists), Toast.LENGTH_SHORT).show()
                     else -> {
-                        ProjectManager.createProject(name)
+                        ProjectManager.createProject(this, name)
                         ProjectManager.setActiveProject(this, name)
                         rebuildList()
                         setResult(RESULT_OK)
@@ -254,7 +254,7 @@ class ProjectPickerActivity : AppCompatActivity() {
                     newName.isEmpty() ->
                         Toast.makeText(this, getString(R.string.project_name_empty), Toast.LENGTH_SHORT).show()
                     newName == currentName -> {}
-                    ProjectManager.getAllProjects().contains(newName) ->
+                    ProjectManager.getAllProjects(this).contains(newName) ->
                         Toast.makeText(this, getString(R.string.project_name_exists), Toast.LENGTH_SHORT).show()
                     else -> {
                         ProjectManager.renameProject(this, currentName, newName)
