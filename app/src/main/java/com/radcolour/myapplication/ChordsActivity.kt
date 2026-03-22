@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@Suppress("DEPRECATION")
 class ChordsActivity : AppCompatActivity() {
 
     private lateinit var btnBack: ImageButton
@@ -32,6 +33,7 @@ class ChordsActivity : AppCompatActivity() {
     private lateinit var tvChordName: TextView
     private lateinit var tvChordDescription: TextView
     private lateinit var fretboardView: FretboardView
+    private lateinit var emptyStateChords: EmptyStateView
 
     private var byRoot = true
     private var showingGuitar = true
@@ -83,6 +85,16 @@ class ChordsActivity : AppCompatActivity() {
         tvChordName = findViewById(R.id.tvChordName)
         tvChordDescription = findViewById(R.id.tvChordDescription)
         fretboardView = findViewById(R.id.fretboardView)
+        emptyStateChords = findViewById(R.id.emptyStateChords)
+
+        emptyStateChords.setup(
+            iconRes = R.drawable.ic_empty_chords,
+            title = getString(R.string.empty_chords_title),
+            subtitle = getString(R.string.empty_chords_subtitle),
+            accentColour = 0xFF7DD6FF.toInt()
+        )
+
+        showFretboardEmptyState(true)
 
         btnBack.setOnClickListener {
             finish()
@@ -98,6 +110,11 @@ class ChordsActivity : AppCompatActivity() {
 
         handleIncomingIntent(intent)
         buildPrimarySelector()
+    }
+
+    private fun showFretboardEmptyState(show: Boolean) {
+        emptyStateChords.visibility = if (show) View.VISIBLE else View.GONE
+        fretboardView.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -154,21 +171,7 @@ class ChordsActivity : AppCompatActivity() {
     }
 
     private fun showToolsMenu() {
-        val options = arrayOf(
-            getString(R.string.tools_key_finder),
-            getString(R.string.tools_transposer)
-        )
-        AlertDialog.Builder(this)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showKeyFinder()
-                    1 -> showTransposer()
-                }
-            }
-            .show()
-            .apply {
-                window?.setBackgroundDrawableResource(R.drawable.bg_card)
-            }
+        showKeyFinder()
     }
 
     private fun showKeyFinder() {
@@ -181,40 +184,6 @@ class ChordsActivity : AppCompatActivity() {
             onDismiss = {
                 highlightedChords = emptySet()
                 buildPrimarySelector()
-            }
-        ).show()
-    }
-
-    private fun showTransposer() {
-        val prefs = getSharedPreferences("progression_prefs", MODE_PRIVATE)
-        val json = prefs.getString("sections", null)
-        val progressionChords = mutableListOf<String>()
-        if (json != null) {
-            try {
-                val array = org.json.JSONArray(json)
-                for (i in 0 until array.length()) {
-                    val obj = array.getJSONObject(i)
-                    val chordsArray = obj.getJSONArray("chords")
-                    for (j in 0 until chordsArray.length()) {
-                        val chord = chordsArray.getString(j)
-                        if (!progressionChords.contains(chord)) progressionChords.add(chord)
-                    }
-                }
-            } catch (e: Exception) {
-                // ignore
-            }
-        }
-
-        TransposerDialog(
-            context = this,
-            chordData = chordData,
-            currentProgression = progressionChords,
-            onProgressionTransposed = { transposed ->
-                Toast.makeText(
-                    this,
-                    getString(R.string.transposer_result_progression, transposed.joinToString(" → ")),
-                    Toast.LENGTH_LONG
-                ).show()
             }
         ).show()
     }
@@ -400,6 +369,7 @@ class ChordsActivity : AppCompatActivity() {
         selectedPrimary = ""
         selectedSecondary = ""
         selectedChordKey = ""
+        showFretboardEmptyState(true)
 
         val items = if (byRoot) roots else chordTypes
         items.forEach { item ->
@@ -407,8 +377,8 @@ class ChordsActivity : AppCompatActivity() {
             btn.text = item
             btn.textSize = 11f
             btn.setTextColor(0xFF7DD6FF.toInt())
-            btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.dark)
             btn.background = getDrawable(R.drawable.bg_button_press)
+            btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.dark)
             btn.stateListAnimator = null
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -430,6 +400,7 @@ class ChordsActivity : AppCompatActivity() {
         tvChordName.text = ""
         tvChordDescription.text = ""
         selectedChordKey = ""
+        showFretboardEmptyState(true)
 
         val items = if (byRoot) chordTypes else roots
 
@@ -485,6 +456,7 @@ class ChordsActivity : AppCompatActivity() {
         else
             chord.description
         currentPositionIndex = 0
+        showFretboardEmptyState(false)
         buildPositionSelector(chord)
         refreshFretboard(chord)
     }

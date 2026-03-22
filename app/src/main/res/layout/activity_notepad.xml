@@ -24,14 +24,14 @@
             android:contentDescription="@string/btn_back"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="32dp"
+            android:layout_weight="1"
             android:background="@drawable/bg_section_header_blue"
             android:paddingStart="12dp"
             android:gravity="center_vertical"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1">
+            android:layout_marginEnd="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -102,11 +102,17 @@
         android:layout_height="1dp"
         android:background="@color/outline"/>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="12dp">
+
+        <com.radcolour.myapplication.EmptyStateView
+            android:id="@+id/emptyStateNotepad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
 
         <EditText
             android:id="@+id/etNotes"
@@ -122,6 +128,6 @@
             android:textColorHint="@color/on_surface_variant"
             android:lineSpacingMultiplier="1.4"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

@@ -57,11 +57,8 @@ class ProjectPickerActivity : AppCompatActivity() {
                 else
                     getDrawable(R.drawable.bg_card)
                 layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    56
-                ).also {
-                    it.bottomMargin = 6
-                }
+                    LinearLayout.LayoutParams.MATCH_PARENT, 56
+                ).also { it.bottomMargin = 6 }
                 setPadding(16, 0, 16, 0)
             }
 
@@ -188,6 +185,19 @@ class ProjectPickerActivity : AppCompatActivity() {
             row.addView(btnRename)
             row.addView(btnDelete)
             projectList.addView(row)
+        }
+
+        if (ProjectManager.getAllProjects().size == 1) {
+            projectList.addView(TextView(this).apply {
+                text = getString(R.string.empty_projects_hint)
+                textSize = 10f
+                setTextColor(0xFF8A8A8A.toInt())
+                gravity = android.view.Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also { it.topMargin = 16 }
+            })
         }
     }
 

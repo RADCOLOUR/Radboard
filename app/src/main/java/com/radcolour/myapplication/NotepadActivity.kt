@@ -1,7 +1,9 @@
 package com.radcolour.myapplication
 
 import android.os.Bundle
+import android.text.Editable
 import android.text.Spannable
+import android.text.TextWatcher
 import android.text.style.BulletSpan
 import android.text.style.StyleSpan
 import android.graphics.Typeface
@@ -19,6 +21,7 @@ class NotepadActivity : AppCompatActivity() {
     private lateinit var btnBullet: Button
     private lateinit var btnClear: Button
     private lateinit var etNotes: EditText
+    private lateinit var emptyStateNotepad: EmptyStateView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +36,23 @@ class NotepadActivity : AppCompatActivity() {
         btnBullet = findViewById(R.id.btnBullet)
         btnClear = findViewById(R.id.btnClear)
         etNotes = findViewById(R.id.etNotes)
+        emptyStateNotepad = findViewById(R.id.emptyStateNotepad)
+
+        emptyStateNotepad.setup(
+            iconRes = R.drawable.ic_empty_notepad,
+            title = getString(R.string.empty_notepad_title),
+            subtitle = getString(R.string.empty_notepad_subtitle),
+            accentColour = 0xFFFFB3D9.toInt()
+        )
 
         loadNotes()
+        updateEmptyState()
+
+        etNotes.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) { updateEmptyState() }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
         btnBack.setOnClickListener {
             saveNotes()
@@ -54,7 +72,14 @@ class NotepadActivity : AppCompatActivity() {
         btnClear.setOnClickListener {
             etNotes.text.clear()
             saveNotes()
+            updateEmptyState()
         }
+    }
+
+    private fun updateEmptyState() {
+        val isEmpty = etNotes.text.isEmpty()
+        emptyStateNotepad.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        etNotes.setBackgroundResource(if (isEmpty) android.R.color.transparent else R.drawable.bg_card_gradient_blue)
     }
 
     private fun loadNotes() {
@@ -71,11 +96,9 @@ class NotepadActivity : AppCompatActivity() {
         val start = etNotes.selectionStart
         val end = etNotes.selectionEnd
         if (start == end) return
-
         val spannable = etNotes.text
         val existing = spannable.getSpans(start, end, StyleSpan::class.java)
             .filter { it.style == Typeface.BOLD }
-
         if (existing.isNotEmpty()) {
             existing.forEach { spannable.removeSpan(it) }
         } else {
@@ -91,7 +114,6 @@ class NotepadActivity : AppCompatActivity() {
         val start = etNotes.selectionStart
         val end = etNotes.selectionEnd
         val spannable = etNotes.text
-
         val existing = spannable.getSpans(start, end, BulletSpan::class.java)
         if (existing.isNotEmpty()) {
             existing.forEach { spannable.removeSpan(it) }

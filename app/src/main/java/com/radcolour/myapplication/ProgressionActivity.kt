@@ -119,6 +119,24 @@ class ProgressionActivity : AppCompatActivity() {
 
     private fun rebuildUI() {
         sectionsContainer.removeAllViews()
+
+        if (sections.isEmpty()) {
+            val emptyState = EmptyStateView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+                setup(
+                    iconRes = R.drawable.ic_empty_chords,
+                    title = getString(R.string.empty_progression_title),
+                    subtitle = getString(R.string.empty_progression_subtitle),
+                    accentColour = 0xFFFFB3D9.toInt()
+                )
+            }
+            sectionsContainer.addView(emptyState)
+            return
+        }
+
         sections.forEach { section ->
             sectionsContainer.addView(buildSectionView(section))
         }
