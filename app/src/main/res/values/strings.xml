@@ -86,7 +86,7 @@
     <string name="notepad_hint">Start typing…</string>
     <string name="progression_title">Chord Progressions</string>
     <string name="chords_label">Chords</string>
-    <string name="app_version">Radboard v1.1.1</string>
+    <string name="app_version">Radboard v1.1.2</string>
     <string name="active_project_label">Active: %1$s</string>
     <string name="btn_new_project">+ New</string>
     <string name="btn_select">Select</string>
