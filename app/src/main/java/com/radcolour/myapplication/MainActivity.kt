@@ -14,6 +14,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import com.radcolour.myapplication.SessionManager.sessionRunning
+import com.radcolour.myapplication.SessionManager.sessionSeconds
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,14 +38,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tvActiveProject: TextView
     private lateinit var btnProjectPicker: LinearLayout
+    private lateinit var btnProjectInfo: LinearLayout
 
     private val REQUEST_PROJECT_PICKER = 2001
 
     private val handler = Handler(Looper.getMainLooper())
     private val clockFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-
-    private var sessionRunning = false
-    private var sessionSeconds = 0L
     private val tapTimes = mutableListOf<Long>()
     private var swipeStartX = 0f
     private var swipeStartY = 0f
@@ -60,8 +60,8 @@ class MainActivity : AppCompatActivity() {
 
     private val sessionRunnable = object : Runnable {
         override fun run() {
-            if (sessionRunning) {
-                sessionSeconds++
+            if (SessionManager.sessionRunning) {
+                SessionManager.sessionSeconds++
                 updateSessionDisplay()
                 handler.postDelayed(this, 1000)
             }
@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         btnNotepad = findViewById(R.id.btnNotepad)
         btnProgressions = findViewById(R.id.btnProgressions)
         btnSettings = findViewById(R.id.btnSettings)
+        btnProjectInfo = findViewById(R.id.btnProjectInfo)
 
         handler.post(clockRunnable)
 
@@ -118,14 +119,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSessionStart.setOnClickListener {
-            if (sessionRunning) {
-                sessionRunning = false
-                btnSessionStart.text = getString(R.string.btn_start)
+            if (SessionManager.sessionRunning) {
+                SessionManager.sessionRunning = false
+                btnSessionStart.text = getString(R.string.btn_stop)
             } else {
-                sessionRunning = true
+                SessionManager.sessionRunning = true
                 btnSessionStart.text = getString(R.string.btn_stop)
                 handler.post(sessionRunnable)
             }
+        }
+
+        btnSessionReset.setOnClickListener {
+            SessionManager.sessionRunning = false
+            SessionManager.sessionSeconds = 0L
+            btnSessionStart.text = getString(R.string.btn_start)
+            updateSessionDisplay()
         }
 
         btnSessionReset.setOnClickListener {
@@ -172,6 +180,13 @@ class MainActivity : AppCompatActivity() {
         btnProgressions.setOnClickListener {
             drawerLayout.closeDrawer(sidebar)
             startActivity(Intent(this, ProgressionActivity::class.java))
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        }
+
+        btnProjectInfo.setOnClickListener {
+            drawerLayout.closeDrawer(sidebar)
+            startActivity(Intent(this, ProjectInfoActivity::class.java))
             @Suppress("DEPRECATION")
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }

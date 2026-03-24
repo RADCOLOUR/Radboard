@@ -16,6 +16,16 @@ object ProjectManager {
     private const val KEY_ACTIVE_PROJECT = "active_project"
     private const val DEFAULT_PROJECT = "Untitled Project"
 
+    data class ProjectInfo(
+        val name: String,
+        val created: String,
+        val bpm: String,
+        val key: String,
+        val scale: String,
+        val description: String,
+        val timeSpentSeconds: Long
+    )
+
     private fun getProjectsRoot(context: Context): File {
         return File(context.getExternalFilesDir(null), "projects")
     }
@@ -55,7 +65,15 @@ object ProjectManager {
         val dir = File(getProjectsRoot(context), name)
         if (dir.exists()) return false
         dir.mkdirs()
-        writeInfo(context, name)
+        writeInfo(context, name, ProjectInfo(
+            name = name,
+            created = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
+            bpm = "",
+            key = "",
+            scale = "",
+            description = "",
+            timeSpentSeconds = 0
+        ))
         getNotepadFile(context, name).writeText("")
         getProgressionFile(context, name).writeText("[]")
         return true
@@ -122,15 +140,57 @@ object ProjectManager {
         file.writeText(content)
     }
 
-    private fun writeInfo(context: Context, projectName: String) {
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-        val info = StringBuilder()
-        info.appendLine("name=$projectName")
-        info.appendLine("created=$date")
-        info.appendLine("bpm=")
-        info.appendLine("key=")
-        info.appendLine("notes=")
-        getInfoFile(context, projectName).writeText(info.toString())
+    fun readInfo(context: Context, projectName: String): ProjectInfo {
+        val file = getInfoFile(context, projectName)
+        val defaults = ProjectInfo(
+            name = projectName,
+            created = "",
+            bpm = "",
+            key = "",
+            scale = "",
+            description = "",
+            timeSpentSeconds = 0
+        )
+        if (!file.exists()) return defaults
+
+        val map = mutableMapOf<String, String>()
+        file.readLines().forEach { line ->
+            val idx = line.indexOf('=')
+            if (idx >= 0) {
+                map[line.substring(0, idx).trim()] = line.substring(idx + 1).trim()
+            }
+        }
+
+        return ProjectInfo(
+            name = map["name"] ?: projectName,
+            created = map["created"] ?: "",
+            bpm = map["bpm"] ?: "",
+            key = map["key"] ?: "",
+            scale = map["scale"] ?: "",
+            description = map["description"] ?: "",
+            timeSpentSeconds = map["time_spent"]?.toLongOrNull() ?: 0
+        )
+    }
+
+    fun writeInfo(context: Context, projectName: String, info: ProjectInfo) {
+        val file = getInfoFile(context, projectName)
+        file.parentFile?.mkdirs()
+        val sb = StringBuilder()
+        sb.appendLine("name=${info.name}")
+        sb.appendLine("created=${info.created}")
+        sb.appendLine("bpm=${info.bpm}")
+        sb.appendLine("key=${info.key}")
+        sb.appendLine("scale=${info.scale}")
+        sb.appendLine("description=${info.description}")
+        sb.appendLine("time_spent=${info.timeSpentSeconds}")
+        file.writeText(sb.toString())
+    }
+
+    fun addTimeSpent(context: Context, projectName: String, seconds: Long) {
+        val info = readInfo(context, projectName)
+        writeInfo(context, projectName, info.copy(
+            timeSpentSeconds = info.timeSpentSeconds + seconds
+        ))
     }
 
     fun exportProject(context: Context, projectName: String): File? {

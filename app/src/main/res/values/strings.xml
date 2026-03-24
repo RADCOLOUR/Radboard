@@ -86,7 +86,7 @@
     <string name="notepad_hint">Start typing…</string>
     <string name="progression_title">Chord Progressions</string>
     <string name="chords_label">Chords</string>
-    <string name="app_version">Radboard v1.1.2</string>
+    <string name="app_version">Radboard v1.2.0</string>
     <string name="active_project_label">Active: %1$s</string>
     <string name="btn_new_project">+ New</string>
     <string name="btn_select">Select</string>
@@ -113,4 +113,23 @@
     <string name="empty_chords_title">No chord selected</string>
     <string name="empty_chords_subtitle">Select a root note above to get started</string>
     <string name="empty_projects_hint">Tap + New to create another project</string>
+    <string name="btn_project_info">Project Info</string>
+    <string name="btn_edit">Edit</string>
+    <string name="btn_save">Save</string>
+    <string name="edit_project_info_title">Edit Project Info</string>
+    <string name="info_section_time">Time Spent</string>
+    <string name="info_section_details">Details</string>
+    <string name="info_section_description">Description</string>
+    <string name="info_created">Created: %1$s</string>
+    <string name="info_key">Key: %1$s</string>
+    <string name="info_scale">Scale: %1$s</string>
+    <string name="info_bpm">BPM: %1$s</string>
+    <string name="info_time_spent">%1$s</string>
+    <string name="info_not_set">Not set</string>
+    <string name="info_unknown">Unknown</string>
+    <string name="info_no_description">No description — tap Edit to add one</string>
+    <string name="info_field_key">Key (e.g. C, F#, Bb)</string>
+    <string name="info_field_scale">Scale (e.g. Major, Minor)</string>
+    <string name="info_field_bpm">BPM</string>
+    <string name="info_field_description">Description</string>
 </resources>
