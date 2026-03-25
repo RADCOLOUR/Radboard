@@ -8,7 +8,7 @@ modding your Amazon Echo Show 5" (First Gen) to include LineageOS, please read [
 I am pretty sure that this can also work on tablets, but it may come with a lot of visual issues and bugs.
 If you want to try running this on any other android device, make sure its running Android 11+.
 
-To create projects better, and to create .radpack files for your chords, download the [Radboard Companion(https://github.com/RADCOLOUR/Radboard-Companion) app which is available for Windows, Mac and Linux.
+To create projects better, and to create .radpack files for your chords, download the [Radboard Companion](https://github.com/RADCOLOUR/Radboard-Companion) app which is available for Windows, Mac and Linux.
 
 This app requires an Internet Connection for updating, if you do not have internet enabled then you will have to 
 download updates via .apk from here, which is kind of a hassle.
