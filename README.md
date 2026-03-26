@@ -14,3 +14,7 @@ This app requires an Internet Connection for updating, if you do not have intern
 download updates via .apk from here, which is kind of a hassle.
 
 Visit [The Wiki](https://github.com/RADCOLOUR/Radboard/wiki) for more information on this project, including how to install and the Quick Start guide.
+
+Please support me if you can!
+
+<a href='https://ko-fi.com/F1F71FW2TZ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
