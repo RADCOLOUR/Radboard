@@ -18,3 +18,26 @@ Visit [The Wiki](https://github.com/RADCOLOUR/Radboard/wiki) for more informatio
 Please support me if you can!
 
 <a href='https://ko-fi.com/F1F71FW2TZ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+## Images
+
+### Main Menu
+<img width="974" height="499" alt="Main Menu" src="https://github.com/user-attachments/assets/d69690f7-8ad8-49ca-b16c-dfb8a0ac294c" />
+
+### Chords Menu
+<img width="975" height="497" alt="Chords Menu" src="https://github.com/user-attachments/assets/2c63c18e-2bd2-4088-a749-1eb63575d7c9" />
+
+### Notepad
+<img width="979" height="498" alt="Notepad" src="https://github.com/user-attachments/assets/df4c7360-f97f-4bef-9589-82bf91ad88ff" />
+
+### Chord Progressions
+<img width="978" height="506" alt="Chord Progressions" src="https://github.com/user-attachments/assets/3e2cfd4f-389f-4ff7-beb1-0446000a9a1f" />
+
+### Project Settings / Project Manager
+<img width="976" height="496" alt="Project Settings" src="https://github.com/user-attachments/assets/e8b8972c-be03-48fe-be2a-7816381691cd" />
+
+### Settings 
+<img width="981" height="497" alt="Settings" src="https://github.com/user-attachments/assets/21877461-50b8-4f37-a139-6774c1b75242" />
+
+### Project Selection Menu
+<img width="983" height="505" alt="Project Selection Menu" src="https://github.com/user-attachments/assets/473eb475-dce2-4e10-9bd2-6156533ec7e6" />
