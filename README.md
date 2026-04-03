@@ -17,7 +17,7 @@ Visit [The Wiki](https://github.com/RADCOLOUR/Radboard/wiki) for more informatio
 
 Discord Coming Soon.
 
-Please support me if you can!
+Please support me on Kofi if you can!
 
 <a href='https://ko-fi.com/F1F71FW2TZ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
