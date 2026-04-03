@@ -15,7 +15,7 @@ download updates via .apk from here, which is kind of a hassle.
 
 Visit [The Wiki](https://github.com/RADCOLOUR/Radboard/wiki) for more information on this project, including how to install and the Quick Start guide.
 
-Discord Coming Soon.
+Join the [Discord](https://discord.gg/ZC8SVmEJEz)!
 
 Please support me on Kofi if you can!
 
