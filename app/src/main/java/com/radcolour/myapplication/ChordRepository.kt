@@ -46,6 +46,7 @@ object ChordRepository {
     fun addTypeIfMissing(type: String) {
         if (!_types.contains(type)) _types = _types + type
     }
+
     fun importChord(context: Context, chord: ChordsActivity.ChordInfo) {
         importedChords[chord.name] = chord
         saveImported(context)
@@ -87,6 +88,7 @@ object ChordRepository {
             BuiltInResult(emptyMap(), emptyList(), emptyList())
         }
     }
+
     private fun saveImported(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val array = JSONArray()
@@ -97,7 +99,6 @@ object ChordRepository {
             obj.put("root", chord.root)
             obj.put("type", chord.type)
             obj.put("guitarPositions", positionsToJson(chord.guitarPositions))
-            obj.put("bassPositions", positionsToJson(chord.bassPositions))
             array.put(obj)
         }
         prefs.edit().putString(KEY_IMPORTED, array.toString()).apply()
@@ -116,8 +117,7 @@ object ChordRepository {
                 val root = obj.optString("root", "")
                 val type = obj.optString("type", "")
                 val guitar = jsonToPositions(obj.getJSONArray("guitarPositions"))
-                val bass = jsonToPositions(obj.getJSONArray("bassPositions"))
-                map[name] = ChordsActivity.ChordInfo(name, description, guitar, bass, root, type)
+                map[name] = ChordsActivity.ChordInfo(name, description, guitar, root, type)
             }
             map
         } catch (e: Exception) {

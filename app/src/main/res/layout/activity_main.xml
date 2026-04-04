@@ -6,162 +6,257 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:orientation="horizontal"
-            android:paddingStart="8dp"
-            android:paddingEnd="16dp"
-            android:gravity="center_vertical"
-            android:background="@color/background">
-
-            <ImageButton
-                android:id="@+id/btnMenu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_button_press"
-                android:src="@drawable/ic_menu"
-                android:scaleType="center"
-                android:contentDescription="@string/btn_menu"/>
-
-            <TextView
-                android:id="@+id/tvBranding"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/branding"
-                android:textColor="@color/on_background"
-                android:textSize="15sp"
-                android:letterSpacing="0.05"
-                android:textStyle="bold"
-                android:gravity="center"/>
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/btnProjectPicker"
-                android:layout_width="0dp"
-                android:layout_height="32dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@drawable/bg_card_gradient_green"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true">
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp"
+                android:gravity="center_vertical"
+                android:background="@color/background">
+
+                <ImageButton
+                    android:id="@+id/btnMenu"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_button_press"
+                    android:src="@drawable/ic_menu"
+                    android:scaleType="center"
+                    android:contentDescription="@string/btn_menu"/>
 
                 <TextView
-                    android:id="@+id/tvActiveProject"
+                    android:id="@+id/tvBranding"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/positive"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:ellipsize="end"/>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_projects"
-                    android:layout_marginStart="6dp"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvClock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/default_timer"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="13sp"
-                android:letterSpacing="0.02"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/outline"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/bg_card_gradient_pink"
-                android:padding="16dp"
-                android:layout_marginEnd="6dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/session_label"
-                    android:textColor="@color/primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:text="@string/branding"
+                    android:textColor="@color/on_background"
+                    android:textSize="15sp"
                     android:letterSpacing="0.05"
-                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <LinearLayout
+                    android:id="@+id/chipCompanion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_card_gradient_blue"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:background="@color/tertiary"
+                        android:layout_marginEnd="5dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/companion_connected"
+                        android:textColor="@color/tertiary"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnProjectPicker"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginBottom="12dp"/>
+                    android:background="@drawable/bg_card_gradient_green"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvActiveProject"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/positive"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:ellipsize="end"/>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_projects"
+                        android:layout_marginStart="6dp"/>
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvSessionTimer"
+                    android:id="@+id/tvClock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/default_timer"
-                    android:textColor="@color/primary"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="13sp"
                     android:letterSpacing="0.02"/>
 
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/outline"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:weightSum="2">
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_card_gradient_pink"
+                    android:padding="16dp"
+                    android:layout_marginEnd="6dp">
 
-                    <Button
-                        android:id="@+id/btnSessionStart"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/session_label"
+                        android:textColor="@color/primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:id="@+id/tvSessionTimer"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/btn_start"
-                        android:textColor="@color/on_primary"
-                        android:background="@drawable/bg_button_primary_press"
-                        android:textSize="11sp"
-                        android:stateListAnimator="@null"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"/>
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_timer"
+                        android:textColor="@color/primary"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.02"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <Button
+                            android:id="@+id/btnSessionStart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="@string/btn_start"
+                            android:textColor="@color/on_primary"
+                            android:background="@drawable/bg_button_primary_press"
+                            android:textSize="11sp"
+                            android:stateListAnimator="@null"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"/>
+
+                        <Button
+                            android:id="@+id/btnSessionReset"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="@string/btn_reset"
+                            android:textColor="@color/primary"
+                            android:background="@drawable/bg_button_press"
+                            android:backgroundTint="@color/surface_variant"
+                            android:textSize="11sp"
+                            android:stateListAnimator="@null"
+                            android:layout_marginStart="8dp"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_card_gradient_yellow"
+                    android:padding="16dp"
+                    android:layout_marginStart="6dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bpm_label"
+                        android:textColor="@color/secondary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:id="@+id/tvBpm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_bpm"
+                        android:textColor="@color/secondary"
+                        android:textSize="52sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.02"/>
 
                     <Button
-                        android:id="@+id/btnSessionReset"
+                        android:id="@+id/btnTap"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:text="@string/btn_tap"
+                        android:textColor="@color/on_secondary"
+                        android:background="@drawable/bg_button_secondary_press"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:stateListAnimator="@null"
+                        android:layout_marginTop="12dp"/>
+
+                    <Button
+                        android:id="@+id/btnBpmReset"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:text="@string/btn_reset"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/secondary"
                         android:background="@drawable/bg_button_press"
                         android:backgroundTint="@color/surface_variant"
                         android:textSize="11sp"
                         android:stateListAnimator="@null"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"/>
 
@@ -169,69 +264,39 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/bg_card_gradient_yellow"
-                android:padding="16dp"
-                android:layout_marginStart="6dp">
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bpm_label"
-                    android:textColor="@color/secondary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.05"
-                    android:textAllCaps="true"
-                    android:gravity="center"
-                    android:layout_marginBottom="12dp"/>
+        <LinearLayout
+            android:id="@+id/overlayCompanion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/background"
+            android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/tvBpm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/default_bpm"
-                    android:textColor="@color/secondary"
-                    android:textSize="52sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/branding"
+                android:textColor="@color/tertiary"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="16dp"/>
 
-                <Button
-                    android:id="@+id/btnTap"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:text="@string/btn_tap"
-                    android:textColor="@color/on_secondary"
-                    android:background="@drawable/bg_button_secondary_press"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:stateListAnimator="@null"
-                    android:layout_marginTop="12dp"/>
-
-                <Button
-                    android:id="@+id/btnBpmReset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="@string/btn_reset"
-                    android:textColor="@color/secondary"
-                    android:background="@drawable/bg_button_press"
-                    android:backgroundTint="@color/surface_variant"
-                    android:textSize="11sp"
-                    android:stateListAnimator="@null"
-                    android:layout_marginTop="8dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"/>
-
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/companion_connected"
+                android:textColor="@color/tertiary"
+                android:textSize="14sp"
+                android:letterSpacing="0.1"
+                android:textAllCaps="true"/>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/sidebar"
@@ -422,7 +487,7 @@
             android:paddingStart="20dp"
             android:text="@string/app_version"
             android:textColor="@color/on_surface_variant"
-            android:textSize="9sp" />
+            android:textSize="9sp"/>
 
     </LinearLayout>
 

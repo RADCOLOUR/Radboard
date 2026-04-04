@@ -130,6 +130,68 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
+                android:background="@drawable/bg_section_header_blue"
+                android:paddingStart="12dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_companion"
+                    android:textColor="@color/tertiary"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.15"
+                    android:textAllCaps="true"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_card_gradient_blue"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="4dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_companion_fullscreen_title"
+                        android:textColor="@color/on_background"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_companion_fullscreen_desc"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="9sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switchCompanionFullscreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumbTint="@color/tertiary"
+                    android:trackTint="@color/tertiary_container"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
                 android:background="@drawable/bg_section_header_pink"
                 android:paddingStart="12dp"
                 android:gravity="center_vertical"

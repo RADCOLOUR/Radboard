@@ -23,8 +23,6 @@ class ChordsActivity : AppCompatActivity() {
     private lateinit var btnBack: ImageButton
     private lateinit var btnByRoot: Button
     private lateinit var btnByType: Button
-    private lateinit var btnGuitar: Button
-    private lateinit var btnBass: Button
     private lateinit var btnImport: ImageButton
     private lateinit var btnTools: ImageButton
     private lateinit var selectorRow: LinearLayout
@@ -36,7 +34,6 @@ class ChordsActivity : AppCompatActivity() {
     private lateinit var emptyStateChords: EmptyStateView
 
     private var byRoot = true
-    private var showingGuitar = true
     private var selectedPrimary = ""
     private var selectedSecondary = ""
     private var selectedChordKey = ""
@@ -52,7 +49,6 @@ class ChordsActivity : AppCompatActivity() {
         val name: String,
         val description: String,
         val guitarPositions: List<FretboardView.ChordPosition>,
-        val bassPositions: List<FretboardView.ChordPosition>,
         val root: String = "",
         val type: String = ""
     )
@@ -75,8 +71,6 @@ class ChordsActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
         btnByRoot = findViewById(R.id.btnByRoot)
         btnByType = findViewById(R.id.btnByType)
-        btnGuitar = findViewById(R.id.btnGuitar)
-        btnBass = findViewById(R.id.btnBass)
         btnImport = findViewById(R.id.btnImport)
         btnTools = findViewById(R.id.btnTools)
         selectorRow = findViewById(R.id.selectorRow)
@@ -103,8 +97,6 @@ class ChordsActivity : AppCompatActivity() {
         }
         btnByRoot.setOnClickListener { byRoot = true; updateModeButtons(); buildPrimarySelector() }
         btnByType.setOnClickListener { byRoot = false; updateModeButtons(); buildPrimarySelector() }
-        btnGuitar.setOnClickListener { showingGuitar = true; updateInstrumentButtons(); refreshFretboard() }
-        btnBass.setOnClickListener { showingGuitar = false; updateInstrumentButtons(); refreshFretboard() }
         btnImport.setOnClickListener { openImportPicker() }
         btnTools.setOnClickListener { showToolsMenu() }
 
@@ -160,10 +152,8 @@ class ChordsActivity : AppCompatActivity() {
                     processRadPack(content, fileName)
                 fileName.endsWith(".radguitar", ignoreCase = true) ->
                     processRadGuitar(content)
-                fileName.endsWith(".radbass", ignoreCase = true) ->
-                    processRadBass(content)
                 else ->
-                    showToast("Unrecognised file type. Use .radguitar, .radbass or .radpack")
+                    showToast("Unrecognised file type. Use .radguitar or .radpack")
             }
         } catch (e: Exception) {
             showToast("Failed to import: ${e.message}")
@@ -257,20 +247,7 @@ class ChordsActivity : AppCompatActivity() {
     private fun processRadGuitar(content: String) {
         val parsed = RadChordParser.parseRadGuitar(content)
             ?: return showToast("Invalid .radguitar file")
-        val existing = chordData[parsed.name]
-        val chord = RadChordParser.toChordInfo(parsed).copy(
-            bassPositions = existing?.bassPositions ?: emptyList()
-        )
-        finishSingleImport(chord)
-    }
-
-    private fun processRadBass(content: String) {
-        val parsed = RadChordParser.parseRadBass(content)
-            ?: return showToast("Invalid .radbass file")
-        val existing = chordData[parsed.name]
-        val chord = RadChordParser.toChordInfo(parsed).copy(
-            guitarPositions = existing?.guitarPositions ?: emptyList()
-        )
+        val chord = RadChordParser.toChordInfo(parsed)
         finishSingleImport(chord)
     }
 
@@ -351,13 +328,6 @@ class ChordsActivity : AppCompatActivity() {
         btnByRoot.setTextColor(if (byRoot) 0xFF000000.toInt() else 0xFF7DD6FF.toInt())
         btnByType.backgroundTintList = ContextCompat.getColorStateList(this, if (!byRoot) R.color.blue else R.color.dark)
         btnByType.setTextColor(if (!byRoot) 0xFF000000.toInt() else 0xFF7DD6FF.toInt())
-    }
-
-    private fun updateInstrumentButtons() {
-        btnGuitar.backgroundTintList = ContextCompat.getColorStateList(this, if (showingGuitar) R.color.green else R.color.dark)
-        btnGuitar.setTextColor(if (showingGuitar) 0xFF000000.toInt() else 0xFFBFFFAA.toInt())
-        btnBass.backgroundTintList = ContextCompat.getColorStateList(this, if (!showingGuitar) R.color.cream else R.color.dark)
-        btnBass.setTextColor(if (!showingGuitar) 0xFF000000.toInt() else 0xFFFFE57A.toInt())
     }
 
     private fun buildPrimarySelector() {
@@ -463,9 +433,7 @@ class ChordsActivity : AppCompatActivity() {
 
     private fun buildPositionSelector(chord: ChordInfo) {
         positionSelector.removeAllViews()
-        val positions = if (showingGuitar) chord.guitarPositions else chord.bassPositions
-
-        positions.forEachIndexed { index, _ ->
+        chord.guitarPositions.forEachIndexed { index, _ ->
             val btn = Button(this)
             btn.text = if (index == 0) "Open" else "Pos ${index + 1}"
             btn.textSize = 10f
@@ -491,10 +459,10 @@ class ChordsActivity : AppCompatActivity() {
 
     private fun refreshFretboard(chord: ChordInfo? = null) {
         val c = chord ?: chordData[selectedChordKey] ?: return
-        val positions = if (showingGuitar) c.guitarPositions else c.bassPositions
+        val positions = c.guitarPositions
         if (positions.isEmpty()) return
         val pos = positions[currentPositionIndex.coerceAtMost(positions.size - 1)]
-        fretboardView.setPosition(pos, if (showingGuitar) 6 else 4)
+        fretboardView.setPosition(pos, 6)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

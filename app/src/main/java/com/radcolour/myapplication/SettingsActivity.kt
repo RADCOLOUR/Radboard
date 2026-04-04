@@ -18,6 +18,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var btnBack: ImageButton
     private lateinit var switchPreRelease: Switch
+    private lateinit var switchCompanionFullscreen: Switch
     private lateinit var btnClearChords: Button
     private lateinit var tvVersion: TextView
     private lateinit var cardVersion: View
@@ -25,10 +26,16 @@ class SettingsActivity : AppCompatActivity() {
     companion object {
         const val PREFS_NAME = "radboard_settings"
         const val KEY_PRERELEASE = "enable_prerelease"
+        const val KEY_COMPANION_FULLSCREEN = "companion_fullscreen"
 
         fun isPreReleaseEnabled(context: Context): Boolean {
             return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .getBoolean(KEY_PRERELEASE, false)
+        }
+
+        fun isCompanionFullscreenEnabled(context: Context): Boolean {
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getBoolean(KEY_COMPANION_FULLSCREEN, false)
         }
     }
 
@@ -42,6 +49,7 @@ class SettingsActivity : AppCompatActivity() {
 
         btnBack = findViewById(R.id.btnBack)
         switchPreRelease = findViewById(R.id.switchPreRelease)
+        switchCompanionFullscreen = findViewById(R.id.switchCompanionFullscreen)
         btnClearChords = findViewById(R.id.btnClearChords)
         tvVersion = findViewById(R.id.tvVersion)
         cardVersion = findViewById(R.id.cardVersion)
@@ -49,10 +57,15 @@ class SettingsActivity : AppCompatActivity() {
         tvVersion.text = getString(R.string.settings_version_value, UpdateManager.getCurrentVersion(this))
 
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        switchPreRelease.isChecked = prefs.getBoolean(KEY_PRERELEASE, false)
 
+        switchPreRelease.isChecked = prefs.getBoolean(KEY_PRERELEASE, false)
         switchPreRelease.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean(KEY_PRERELEASE, isChecked).apply()
+        }
+
+        switchCompanionFullscreen.isChecked = prefs.getBoolean(KEY_COMPANION_FULLSCREEN, false)
+        switchCompanionFullscreen.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_COMPANION_FULLSCREEN, isChecked).apply()
         }
 
         btnClearChords.setOnClickListener {

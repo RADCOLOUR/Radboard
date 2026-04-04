@@ -19,7 +19,7 @@ import com.radcolour.myapplication.SessionManager.sessionSeconds
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CompanionManager.ConnectionListener {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var sidebar: View
@@ -35,10 +35,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnNotepad: LinearLayout
     private lateinit var btnProgressions: LinearLayout
     private lateinit var btnSettings: LinearLayout
-
     private lateinit var tvActiveProject: TextView
     private lateinit var btnProjectPicker: LinearLayout
     private lateinit var btnProjectInfo: LinearLayout
+    private lateinit var chipCompanion: LinearLayout
+    private lateinit var overlayCompanion: LinearLayout
 
     private val REQUEST_PROJECT_PICKER = 2001
 
@@ -55,8 +56,6 @@ class MainActivity : AppCompatActivity() {
             handler.postDelayed(this, 1000)
         }
     }
-
-
 
     private val sessionRunnable = object : Runnable {
         override fun run() {
@@ -90,13 +89,15 @@ class MainActivity : AppCompatActivity() {
         btnProgressions = findViewById(R.id.btnProgressions)
         btnSettings = findViewById(R.id.btnSettings)
         btnProjectInfo = findViewById(R.id.btnProjectInfo)
+        tvActiveProject = findViewById(R.id.tvActiveProject)
+        btnProjectPicker = findViewById(R.id.btnProjectPicker)
+        chipCompanion = findViewById(R.id.chipCompanion)
+        overlayCompanion = findViewById(R.id.overlayCompanion)
 
         handler.post(clockRunnable)
 
         ProjectManager.init(this)
-
-        tvActiveProject = findViewById(R.id.tvActiveProject)
-        btnProjectPicker = findViewById(R.id.btnProjectPicker)
+        CompanionManager.init(this)
 
         tvActiveProject.text = ProjectManager.getActiveProject(this)
 
@@ -108,7 +109,6 @@ class MainActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
-
 
         btnMenu.setOnClickListener {
             if (drawerLayout.isDrawerOpen(sidebar)) {
@@ -127,13 +127,6 @@ class MainActivity : AppCompatActivity() {
                 btnSessionStart.text = getString(R.string.btn_stop)
                 handler.post(sessionRunnable)
             }
-        }
-
-        btnSessionReset.setOnClickListener {
-            SessionManager.sessionRunning = false
-            SessionManager.sessionSeconds = 0L
-            btnSessionStart.text = getString(R.string.btn_start)
-            updateSessionDisplay()
         }
 
         btnSessionReset.setOnClickListener {
@@ -204,12 +197,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        CompanionManager.start(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        CompanionManager.stop()
+    }
+
+    override fun onConnectionChanged(connected: Boolean) {
+        val fullscreen = SettingsActivity.isCompanionFullscreenEnabled(this)
+        chipCompanion.visibility = if (connected) View.VISIBLE else View.GONE
+        overlayCompanion.visibility = if (connected && fullscreen) View.VISIBLE else View.GONE
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_PROJECT_PICKER) {
             tvActiveProject.text = ProjectManager.getActiveProject(this)
         }
     }
+
     private fun handleSwipe(event: MotionEvent) {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

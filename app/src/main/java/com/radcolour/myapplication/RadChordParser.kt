@@ -13,7 +13,6 @@ object RadChordParser {
         val name: String,
         val description: String,
         val guitarPositions: List<ParsedPosition>,
-        val bassPositions: List<ParsedPosition>,
         val root: String = "",
         val type: String = ""
     )
@@ -30,12 +29,37 @@ object RadChordParser {
         val line: String,
         val reason: String
     )
+
     fun parseRadGuitar(content: String): ParsedChord? {
-        return parseInstrumentFile(content, isBass = false)
+        val lines = content.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        var name = ""
+        var description = ""
+        var root = ""
+        var type = ""
+        val positions = mutableListOf<ParsedPosition>()
+
+        for (line in lines) {
+            when {
+                line.startsWith("name:", ignoreCase = true) ->
+                    name = line.substringAfter(":").trim()
+                line.startsWith("description:", ignoreCase = true) ->
+                    description = line.substringAfter(":").trim()
+                line.startsWith("root:", ignoreCase = true) ->
+                    root = line.substringAfter(":").trim()
+                line.startsWith("type:", ignoreCase = true) ->
+                    type = line.substringAfter(":").trim()
+                line.startsWith("position:", ignoreCase = true) -> {
+                    val posStr = line.substringAfter(":").trim()
+                    val pos = parsePosition(posStr, 6) ?: continue
+                    positions.add(pos)
+                }
+            }
+        }
+
+        if (name.isEmpty() || positions.isEmpty()) return null
+        return ParsedChord(name, description, positions, root, type)
     }
-    fun parseRadBass(content: String): ParsedChord? {
-        return parseInstrumentFile(content, isBass = true)
-    }
+
     fun parseRadPack(content: String): ParsedPack {
         var author = ""
         var packDescription = ""
@@ -94,7 +118,6 @@ object RadChordParser {
                     }
 
                     val guitarPositions = mutableListOf<ParsedPosition>()
-                    val bassPositions = mutableListOf<ParsedPosition>()
                     i++
 
                     while (i < lines.size) {
@@ -113,15 +136,7 @@ object RadChordParser {
                                     guitarPositions.add(pos)
                                 }
                             }
-                            inner.startsWith("bass:", ignoreCase = true) -> {
-                                val posStr = inner.substringAfter(":").trim()
-                                val pos = parsePosition(posStr, 4)
-                                if (pos == null) {
-                                    errors.add(ParseError(innerLine, inner, "Could not parse bass position: $posStr"))
-                                } else {
-                                    bassPositions.add(pos)
-                                }
-                            }
+                            inner.startsWith("bass:", ignoreCase = true) -> { }
                             inner.startsWith("root:", ignoreCase = true) ->
                                 root = inner.substringAfter(":").trim()
                             inner.startsWith("type:", ignoreCase = true) ->
@@ -132,10 +147,10 @@ object RadChordParser {
                         i++
                     }
 
-                    if (guitarPositions.isEmpty() && bassPositions.isEmpty()) {
-                        errors.add(ParseError(lineNumber, line, "Chord '$name' has no valid positions"))
+                    if (guitarPositions.isEmpty()) {
+                        errors.add(ParseError(lineNumber, line, "Chord '$name' has no valid guitar positions"))
                     } else {
-                        chords.add(ParsedChord(name, chordDescription, guitarPositions, bassPositions, root, type))
+                        chords.add(ParsedChord(name, chordDescription, guitarPositions, root, type))
                     }
 
                     continue
@@ -150,40 +165,7 @@ object RadChordParser {
 
         return ParsedPack(author, packDescription, roots, types, chords, errors)
     }
-    private fun parseInstrumentFile(content: String, isBass: Boolean): ParsedChord? {
-        val lines = content.lines().map { it.trim() }.filter { it.isNotEmpty() }
-        var name = ""
-        var description = ""
-        var root = ""
-        var type = ""
-        val positions = mutableListOf<ParsedPosition>()
 
-        for (line in lines) {
-            when {
-                line.startsWith("name:", ignoreCase = true) ->
-                    name = line.substringAfter(":").trim()
-                line.startsWith("description:", ignoreCase = true) ->
-                    description = line.substringAfter(":").trim()
-                line.startsWith("root:", ignoreCase = true) ->
-                    root = line.substringAfter(":").trim()
-                line.startsWith("type:", ignoreCase = true) ->
-                    type = line.substringAfter(":").trim()
-                line.startsWith("position:", ignoreCase = true) -> {
-                    val posStr = line.substringAfter(":").trim()
-                    val pos = parsePosition(posStr, if (isBass) 4 else 6) ?: continue
-                    positions.add(pos)
-                }
-            }
-        }
-
-        if (name.isEmpty() || positions.isEmpty()) return null
-
-        return if (isBass) {
-            ParsedChord(name, description, emptyList(), positions, root, type)
-        } else {
-            ParsedChord(name, description, positions, emptyList(), root, type)
-        }
-    }
     fun parsePosition(posStr: String, stringCount: Int): ParsedPosition? {
         return try {
             val parts = posStr.trim().split(Regex("\\s+"))
@@ -262,9 +244,11 @@ object RadChordParser {
             null
         }
     }
+
     private fun parseList(raw: String): List<String> {
         return raw.split(",").map { it.trim() }.filter { it.isNotEmpty() }
     }
+
     private fun extractInlineField(meta: String, field: String): String? {
         val regex = Regex("$field:([^\\s]+)", RegexOption.IGNORE_CASE)
         return regex.find(meta)?.groupValues?.get(1)?.trim()
@@ -286,7 +270,6 @@ object RadChordParser {
             name = parsed.name,
             description = parsed.description,
             guitarPositions = parsed.guitarPositions.map { toChordPosition(it) },
-            bassPositions = parsed.bassPositions.map { toChordPosition(it) },
             root = parsed.root,
             type = parsed.type
         )

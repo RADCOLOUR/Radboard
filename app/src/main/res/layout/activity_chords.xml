@@ -238,50 +238,6 @@
                 android:layout_height="1dp"
                 android:background="@color/outline"
                 android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_card_variant"
-                android:layout_margin="8dp"
-                android:padding="2dp"
-                android:weightSum="2">
-
-                <Button
-                    android:id="@+id/btnGuitar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/guitar"
-                    android:textColor="@color/on_positive"
-                    android:background="@drawable/bg_button_press"
-                    android:backgroundTint="@color/positive"
-                    android:textSize="9sp"
-                    android:stateListAnimator="@null"
-                    android:contentDescription="@string/guitar"/>
-
-                <Button
-                    android:id="@+id/btnBass"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/bass"
-                    android:textColor="@color/secondary"
-                    android:background="@drawable/bg_button_press"
-                    android:backgroundTint="@color/surface_variant"
-                    android:textSize="9sp"
-                    android:stateListAnimator="@null"
-                    android:contentDescription="@string/bass"/>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/outline"
-                android:layout_marginTop="6dp"
                 android:layout_marginBottom="4dp"/>
 
             <TextView
