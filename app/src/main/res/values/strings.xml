@@ -132,4 +132,8 @@
     <string name="info_field_scale">Scale (e.g. Major, Minor)</string>
     <string name="info_field_bpm">BPM</string>
     <string name="info_field_description">Description</string>
+    <string name="companion_connected">Companion Connected</string>
+    <string name="settings_section_companion">Companion</string>
+    <string name="settings_companion_fullscreen_title">Full-screen indicator</string>
+    <string name="settings_companion_fullscreen_desc">Show a full-screen overlay when Companion is connected</string>
 </resources>
